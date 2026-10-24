@@ -1,0 +1,11 @@
+[
+  {"name": "good first issue", "color": "7057ff", "description": "Good for newcomers"},
+  {"name": "assignment-1", "color": "5FF983", "description": "Graded assignment, topic 1"},
+  {"name": "assignment-2", "color": "5FF983", "description": "Graded assignment, topic 2"},
+  {"name": "assignment-3", "color": "5FF983", "description": "Graded assignment, topic 3"},
+  {"name": "assignment-4", "color": "5FF983", "description": "Graded assignment, topic 4"},
+  {"name": "task", "color": "EFAD2E", "description": "A task unit one or more team members working on"},
+  {"name": "feature", "color": "0345DB", "description": "A larger unit representing the feature of the delivered solution as agreed with a client"},
+  {"name": "learning", "color": "50C001", "description": "Learning new concepts and ideas"},
+  {"name": "time-report", "color": "5319E7", "description": "Automatically generated time report"}
+]
