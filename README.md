@@ -32,8 +32,8 @@ Raspodjela bodova za navedene dvije cjeline je data u tabeli ispod.
 | Zadaci | Test | Dizajn | QA | Workflow |
 | 25% | 25% | 20% | 20% | 10% |
 
-Bodovi se ne objavljuju u ovom repozitorijumu, jer je javan.
-<!-- TODO (nastavnik): navesti gdje studenti mogu vidjeti svoje bodove (npr. sistem za učenje na daljinu fakulteta). -->
+Bodovi se ne objavljuju u ovom repozitorijumu, jer je javan. Trenutno ostvarene rezultate
+studenti mogu da vide u [dokumentu](https://docs.google.com/spreadsheets/d/1P8LnNoHGuGt4Z4IS-X38ZOIjRur8lJi4z5rI5gohQv8/edit?usp=sharing) sa informacijama o kursu.
 
 **Zadaci:** Student radi četiri zadatka tokom prvog dijela kursa i jedan zadatak recenzije (*review*) na kraju kursa. Svaki zadatak nosi 5% ocjene. Svaki student se ocjenjuje individualno. Način predaje zadataka opisan je u uputstvu [Pravila prilikom predaje rješenja zadataka](docs/assignment-submission.md).
 

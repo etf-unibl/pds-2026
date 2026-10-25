@@ -93,5 +93,6 @@ Postupak otvaranja *pull request*-a i popunjavanja šablona opisan je u uputstvu
 ### Rokovi
 
 Rok za predaju zadatka je naveden u samom zadatku ili u *milestone*-u kojem zadatak pripada.
-
-<!-- TODO (nastavnik): definisati šta se smatra trenutkom predaje (npr. otvaranje pull request-a ili posljednji komit prije roka) i kako se tretira zakašnjela predaja. -->
+Pod predajom zadatka podrazumijeva se trenutak kada je otvoren *pull request*. Naknadne izmjene
+i popravke su moguće i za njih se ne primjenjuju nikakvi kazneni poeni. Krajnji rok za predaju
+svih zadataka, definisan je rokom završetka pripremnog dijela kursa.

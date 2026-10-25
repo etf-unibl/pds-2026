@@ -2,8 +2,6 @@
 
 U drugom dijelu kursa studenti rade u timovima na projektnom zadatku. Proces rada je isti kao kod zadataka (zadatak &rarr; grana &rarr; *pull request* &rarr; pregled &rarr; integracija, [Proces rada u GitHub okruženju](github-workflow.md)), uz razlike opisane u nastavku.
 
-<!-- TODO (nastavnik): navesti gdje se nalazi kod projekta (zaseban repozitorijum tima ili folder/grana u repozitorijumu kursa), naziv odredišne grane i rokove za pojedine faze projekta. -->
-
 ### Organizacija tima
 
 - Tim na početku projekta dijeli projektni zadatak na manje, jasno definisane zadatke (*issues*) i raspoređuje ih po *milestone*-ovima.

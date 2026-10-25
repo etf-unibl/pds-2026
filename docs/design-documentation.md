@@ -37,8 +37,6 @@ Kompletan spisak komandi dat je u [*Doxygen* dokumentaciji](https://www.doxygen.
 
 ### Šta je potrebno dokumentovati
 
-<!-- TODO (nastavnik): provjeriti minimalne zahtjeve za dokumentaciju koji se ocjenjuju. -->
-
 Minimalno, u svakom fajlu dizajna potrebno je dokumentovati:
 
 1. **fajl** - kratak opis sadržaja fajla (`@file` i `@brief`),
