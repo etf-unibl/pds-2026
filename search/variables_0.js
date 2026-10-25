@@ -1,0 +1,4 @@
+var searchData=
+[
+  ['a_5fi_0',['a_i',['../classnand2__gate.html#a2f772a9dbd3efd382f883839850f3b82',1,'nand2_gate']]]
+];
