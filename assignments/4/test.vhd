@@ -30,17 +30,26 @@
 -- OTHER DEALINGS IN THE SOFTWARE
 -----------------------------------------------------------------------------
 
+--! @file
+--! @brief 2-input NAND gate
+
 library ieee;
 use ieee.std_logic_1164.all;
 
--- Add a comment to trigger the workflow
+--! @brief 2-input NAND gate
+--! @details The output y_o is '0' only when both inputs a_i and b_i
+--! are '1'. In all other cases the output is '1'.
 
 entity test is
   port (
-    a_i : in    std_logic;
-    b_i : in    std_logic;
-    y_o : out   std_logic);
+    a_i : in    std_logic;  --! First data input
+    b_i : in    std_logic;  --! Second data input
+    y_o : out   std_logic); --! NAND output
 end entity test;
+
+--! @brief Dataflow architecture of the NAND gate
+--! @details The output is driven by a single concurrent signal
+--! assignment, so the circuit is purely combinational.
 
 architecture arch of test is
 
