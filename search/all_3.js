@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['nand2_5fgate_0',['nand2_gate',['../classnand2__gate.html',1,'']]],
-  ['nand2_5fgate_2evhd_1',['nand2_gate.vhd',['../nand2__gate_8vhd.html',1,'']]]
+  ['ieee_0',['ieee',['../classnand2__gate.html#a0a6af6eef40212dbaf130d57ce711256',1,'nand2_gate.ieee()'],['../classtest.html#a0a6af6eef40212dbaf130d57ce711256',1,'test.ieee()']]]
 ];
