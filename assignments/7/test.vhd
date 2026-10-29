@@ -38,11 +38,12 @@ use ieee.std_logic_1164.all;
 
 --! @brief Two-input AND gate
 --! @details The output is '1' only when both inputs are '1'.
+
 entity test is
   port (
-    a_i : in  std_logic;  --! First input
-    b_i : in  std_logic;  --! Second input
-    y_o : out std_logic); --! AND output
+    a_i : in    std_logic;  --! First input
+    b_i : in    std_logic;  --! Second input
+    y_o : out   std_logic); --! AND output
 end entity test;
 
 architecture arch of test is

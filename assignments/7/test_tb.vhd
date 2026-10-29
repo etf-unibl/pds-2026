@@ -37,48 +37,73 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 --! @brief Testbench entity for the AND2 gate
+
 entity test_tb is
 end entity test_tb;
 
 --! @brief Testbench architecture
-architecture tb of test_tb is
+--! @details Applies all input combinations and checks the output.
 
+architecture arch of test_tb is
+
+  --! @brief Component declaration for the DUT
+  component test is
+    port (
+      a_i : in    std_logic;
+      b_i : in    std_logic;
+      y_o : out   std_logic);
+  end component test;
+
+  --! Signals connected to the DUT
   signal a : std_logic;
   signal b : std_logic;
   signal y : std_logic;
 
 begin
 
-  dut : entity work.test
+  --! @brief Device Under Test (DUT) instantiation
+  dut : component test
     port map (
       a_i => a,
       b_i => b,
       y_o => y);
 
+  --! @brief Stimulus and self-checking process
   stim : process is
   begin
-    -- Test 00 -> expected '0'
-    a <= '0'; b <= '0';
-    wait for 10 ns;
-    assert y = '0' report "Failed for input 00" severity error;
 
-    -- Test 01 -> expected '0'
-    a <= '0'; b <= '1';
+    a <= '0';
+    b <= '0';
     wait for 10 ns;
-    assert y = '0' report "Failed for input 01" severity error;
+    assert y = '0'
+      report "Failed for input 00"
+      severity error;
 
-    -- Test 10 -> expected '0'
-    a <= '1'; b <= '0';
+    a <= '0';
+    b <= '1';
     wait for 10 ns;
-    assert y = '0' report "Failed for input 10" severity error;
+    assert y = '0'
+      report "Failed for input 01"
+      severity error;
 
-    -- Test 11 -> expected '1'
-    a <= '1'; b <= '1';
+    a <= '1';
+    b <= '0';
     wait for 10 ns;
-    assert y = '1' report "Failed for input 11" severity error;
+    assert y = '0'
+      report "Failed for input 10"
+      severity error;
 
-    report "Testbench finished successfully" severity note;
+    a <= '1';
+    b <= '1';
+    wait for 10 ns;
+    assert y = '1'
+      report "Failed for input 11"
+      severity error;
+
+    report "Testbench finished successfully"
+      severity note;
     wait;
+
   end process stim;
 
-end architecture tb;
+end architecture arch;
