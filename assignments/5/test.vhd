@@ -41,8 +41,8 @@ use ieee.std_logic_1164.all;
 
 entity test is
   port (
-    a_i : in    std_logic; --! First data input
-    b_i : in    std_logic; --! Second data input
+    a_i : in    std_logic;  --! First data input
+    b_i : in    std_logic;  --! Second data input
     y_o : out   std_logic); --! Nand gate output
 end entity test;
 
