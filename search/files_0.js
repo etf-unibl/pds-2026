@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['nand2_5fgate_2evhd_0',['nand2_gate.vhd',['../nand2__gate_8vhd.html',1,'']]]
+  ['four_5fbit_5fcomparator_2evhd_0',['four_bit_comparator.vhd',['../four__bit__comparator_8vhd.html',1,'']]]
 ];

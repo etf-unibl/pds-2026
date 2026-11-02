@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['ieee_0',['ieee',['../classnand2__gate.html#a0a6af6eef40212dbaf130d57ce711256',1,'nand2_gate.ieee()'],['../classtest.html#a0a6af6eef40212dbaf130d57ce711256',1,'test.ieee()']]]
+  ['eq_5fhigh_0',['eq_high',['../classfour__bit__comparator_1_1arch.html#af01389bf5115646b53cc6aaa50a85580',1,'four_bit_comparator::arch']]],
+  ['eq_5flow_1',['eq_low',['../classfour__bit__comparator_1_1arch.html#ae1a7211e3da63335f74691cc60c8bddf',1,'four_bit_comparator::arch']]]
 ];

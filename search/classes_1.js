@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['nand2_5fgate_0',['nand2_gate',['../classnand2__gate.html',1,'']]]
+  ['four_5fbit_5fcomparator_0',['four_bit_comparator',['../classfour__bit__comparator.html',1,'']]]
 ];
