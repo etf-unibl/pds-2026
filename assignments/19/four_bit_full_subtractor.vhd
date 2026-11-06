@@ -37,7 +37,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 --! @brief one bit full subtractor
---! @details Outputs '0' only when both inputs are '1'
+--! @details Inputs are four bit numbers A, B and one bit carry in. Outputs are difference (sub_o) and carry out bit.
 
 entity four_bit_full_subtractor is
   port (
@@ -48,9 +48,9 @@ entity four_bit_full_subtractor is
     c_o   : out   std_logic);
 end entity four_bit_full_subtractor;
 
---! @brief Dataflow architecture of NAND2 gate
---! @details nand is built-in operator that is used here for nand operation,
---! <= is non-blocking assign operator
+--! @brief Dataflow architecture of four bit full subtractor
+--! @details four bit full subtroctor is made using four one_bit_full_subtractror components
+--! and carry_s signal for conecting carry in and carry out ports.
 
 architecture arch of four_bit_full_subtractor is
 
@@ -63,7 +63,7 @@ architecture arch of four_bit_full_subtractor is
       carry_o    : out   std_logic);
   end component one_bit_full_subtractor;
 
-  signal borrow : std_logic_vector(2 downto 0);
+  signal carry_s : std_logic_vector(2 downto 0);
 
 begin
 
@@ -73,29 +73,29 @@ begin
       y_i        => b_i(0),
       carry_i    => c_i,
       subtract_o => sub_o(0),
-      carry_o    => borrow(0));
+      carry_o    => carry_s(0));
 
   fs1 : component one_bit_full_subtractor
     port map (
       x_i        => a_i(1),
       y_i        => b_i(1),
-      carry_i    => borrow(0),
+      carry_i    => carry_s(0),
       subtract_o => sub_o(1),
-      carry_o    => borrow(1));
+      carry_o    => carry_s(1));
 
   fs2 : component one_bit_full_subtractor
     port map (
       x_i        => a_i(2),
       y_i        => b_i(2),
-      carry_i    => borrow(1),
+      carry_i    => carry_s(1),
       subtract_o => sub_o(2),
-      carry_o    => borrow(2));
+      carry_o    => carry_s(2));
 
   fs3 : component one_bit_full_subtractor
     port map (
       x_i        => a_i(3),
       y_i        => b_i(3),
-      carry_i    => borrow(2),
+      carry_i    => carry_s(2),
       subtract_o => sub_o(3),
       carry_o    => c_o);
 

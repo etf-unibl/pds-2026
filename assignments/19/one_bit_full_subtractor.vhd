@@ -37,7 +37,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 --! @brief one bit full subtractor
---! @details Outputs '0' only when both inputs are '1'
+--! @details Inputs are X, Y and carry in. Outputs are difference (subtract) and carry out. All ports are one bit.
 
 entity one_bit_full_subtractor is
   port (
@@ -48,9 +48,11 @@ entity one_bit_full_subtractor is
     carry_o    : out   std_logic);
 end entity one_bit_full_subtractor;
 
---! @brief Dataflow architecture of NAND2 gate
---! @details nand is built-in operator that is used here for nand operation,
---! <= is non-blocking assign operator
+--! @brief Dataflow architecture of one bit full subtractor
+--! @details Full one bit subtractor using concurrent sequential logic.
+--! @details Subtract port will be in high logic state if number of high logic states inputs is odd.
+--! @details Carry out will be in high input state if X input port is in low logic state
+--! while either Y input port or Carry in port are in high logic state.
 
 architecture arch of one_bit_full_subtractor is
 
