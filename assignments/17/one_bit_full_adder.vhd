@@ -36,7 +36,6 @@
 --! Use standard library
 
 library ieee;
---! Use logic elements
 use ieee.std_logic_1164.all;
 
 --! @brief one-bit full adder
@@ -54,9 +53,49 @@ end entity one_bit_full_adder;
 
 --! @brief Dataflow architecture of the one-bit full adder
 --! @details The adder is implemented with two concurrent signal assignments
---! derived from the truth table:
+--! derived from the truth table listed below. Notation used in the derivation:
+--! a = a_i, b = b_i, c = c_i, x' = not x, xy = x and y, x + y = x or y.
+--!
+--! Truth table:
+--! @verbatim
+--!   row | a b c | s_o c_o
+--!   ----+-------+--------
+--!    0  | 0 0 0 |  0   0
+--!    1  | 0 0 1 |  1   0
+--!    2  | 0 1 0 |  1   0
+--!    3  | 0 1 1 |  0   1
+--!    4  | 1 0 0 |  1   0
+--!    5  | 1 0 1 |  0   1
+--!    6  | 1 1 0 |  0   1
+--!    7  | 1 1 1 |  1   1
+--! @endverbatim
+--!
+--! Sum output s_o (rows 1, 2, 4, 7):
+--! @verbatim
+--!   s_o = a'b'c + a'bc' + ab'c' + abc
+--!       = a'(b'c + bc') + a(b'c' + bc)
+--!       = a'(b xor c) + a(b xor c)'
+--!       = a xor b xor c
+--! @endverbatim
+--! The sum cannot be simplified further so it is written using the xor operator.
+--!
+--! Output carry c_o (rows 3, 5, 6, 7):
+--! @verbatim
+--!   c_o = a'bc + ab'c + abc' + abc
+--! @endverbatim
+--! Minimization: since abc = abc + abc + abc the minterm
+--! abc is combined with each of the other three minterms:
+--! @verbatim
+--!   c_o = (a'bc + abc) + (ab'c + abc) + (abc' + abc)
+--!       = bc(a' + a)   + ac(b' + b)   + ab(c' + c)
+--!       = bc + ac + ab
+--! @endverbatim
+--!
+--! Final equations:
+--! @verbatim
 --!   s_o = a_i xor b_i xor c_i
 --!   c_o = (a_i and b_i) or (a_i and c_i) or (b_i and c_i)
+--! @endverbatim
 
 architecture arch of one_bit_full_adder is
 

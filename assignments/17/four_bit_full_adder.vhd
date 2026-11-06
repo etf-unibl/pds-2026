@@ -4,7 +4,8 @@
 --
 -- description:
 --
---   This file implements a four-bit full adder in structural style using four cascaded one-bit full adders.
+--   This file implements a four-bit full adder in structural style using four
+--   cascaded one-bit full adders.
 --
 -----------------------------------------------------------------------------
 -- The MIT License
@@ -36,7 +37,6 @@
 --! Use standard library
 
 library ieee;
---! Use logic elements
 use ieee.std_logic_1164.all;
 
 --! @brief four-bit full adder
