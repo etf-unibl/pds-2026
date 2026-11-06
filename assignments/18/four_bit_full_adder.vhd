@@ -63,8 +63,9 @@ end entity four_bit_full_adder;
 
 architecture arch of four_bit_full_adder is
 
-  --! Carry chain: bit 0 is the input carry c_i, bit i+1 is the carry
-  --! out of the adder for bit i, bit 4 is the output carry c_o
+  --! @brief Carry chain between the one-bit full adders
+  --! @details Bit 0 is the input carry c_i, bit i+1 is the carry out of
+  --! the adder for bit i and bit 4 is the output carry c_o.
   signal carry : std_logic_vector(4 downto 0);
 
   --! One-bit full adder used for each bit of the operands

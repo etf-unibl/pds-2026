@@ -54,35 +54,35 @@ end entity one_bit_full_adder;
 
 --! @brief Dataflow architecture of the one-bit full adder
 --! @details The architecture is described in dataflow style.
---! The internal signal ulaz is the concatenation of the inputs
---! a_i, b_i and c_i. The internal signal izlaz holds both outputs:
+--! The internal signal inputs is the concatenation of the inputs
+--! a_i, b_i and c_i. The internal signal outputs holds both outputs:
 --! bit 1 is the carry c_o and bit 0 is the sum sum_o.
 --! The outputs are assigned by a single conditional concurrent
---! signal assignment (when ... else) with one branch for each of the
---! 8 input combinations, written directly from the truth table.
---! The conditions are checked in order from the first to the last.
+--! signal assignment (when ... else) written directly from the truth
+--! table: seven when conditions cover the input combinations 000 to
+--! 110, and the final else branch covers the combination 111.
 
 architecture arch of one_bit_full_adder is
 
   --! Inputs a_i, b_i and c_i packed into a 3-bit vector
-  signal ulaz : std_logic_vector(2 downto 0);
+  signal inputs : std_logic_vector(2 downto 0);
   --! Outputs packed into a 2-bit vector (bit 1 = c_o, bit 0 = sum_o)
-  signal izlaz : std_logic_vector(1 downto 0);
+  signal outputs : std_logic_vector(1 downto 0);
 
 begin
 
-  ulaz <= a_i & b_i & c_i; -- concatenation of the three input bits
+  inputs <= a_i & b_i & c_i; -- concatenation of the three input bits
 
-  izlaz <= "00" when ulaz = "000" else
-           "01" when ulaz = "001" else
-           "01" when ulaz = "010" else
-           "10" when ulaz = "011" else
-           "01" when ulaz = "100" else
-           "10" when ulaz = "101" else
-           "10" when ulaz = "110" else
-           "11";
+  outputs <= "00" when inputs = "000" else
+             "01" when inputs = "001" else
+             "01" when inputs = "010" else
+             "10" when inputs = "011" else
+             "01" when inputs = "100" else
+             "10" when inputs = "101" else
+             "10" when inputs = "110" else
+             "11";
 
-  c_o   <= izlaz(1);
-  sum_o <= izlaz(0);
+  c_o   <= outputs(1);
+  sum_o <= outputs(0);
 
 end architecture arch;
