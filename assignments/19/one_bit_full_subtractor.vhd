@@ -4,7 +4,7 @@
 --
 -- description:
 --
---   This file implements a simple full subtractor circuit.
+--   This file implements a simple full subtractor circuit using
 --
 -----------------------------------------------------------------------------
 -- The MIT License
@@ -41,22 +41,23 @@ use ieee.std_logic_1164.all;
 
 entity one_bit_full_subtractor is
   port (
-    x_i        : in    std_logic;
-    y_i        : in    std_logic;
-    carry_i    : in    std_logic;
-    subtract_o : out   std_logic;
-    carry_o    : out   std_logic);
+    x_i        : in    std_logic;  --! first term
+    y_i        : in    std_logic;  --! second term
+    carry_i    : in    std_logic;  --! carry in port
+    subtract_o : out   std_logic;  --! difference of terms
+    carry_o    : out   std_logic); --! '1' if x_i = 0 and y_i = 1 else '0'
 end entity one_bit_full_subtractor;
 
 --! @brief Dataflow architecture of one bit full subtractor
---! @details Full one bit subtractor using concurrent sequential logic.
+--! @details Full one bit subtractor is described using concurrent sequential logic.
 --! @details Subtract port will be in high logic state if number of high logic states inputs is odd.
 --! @details Carry out will be in high input state if X input port is in low logic state
---! while either Y input port or Carry in port are in high logic state.
+--! while either Y input port or Carry in port are in high logic state
+--! or when both terms and carry in ports are in high logic state
 
 architecture arch of one_bit_full_subtractor is
 
-  signal input : std_logic_vector(2 downto 0);
+  signal input : std_logic_vector(2 downto 0); --! signal for merging all inputs in vector
 
 begin
 
