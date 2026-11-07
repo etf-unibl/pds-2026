@@ -116,10 +116,14 @@ Ports</h2></td></tr>
 <tr class="memdesc:af1a502c254608b4c69c317f0f873735d"><td class="mdescLeft">&#160;</td><td class="mdescLeft">&#160;</td><td class="mdescRight">sum output  <a href="#af1a502c254608b4c69c317f0f873735d"></a><br /></td></tr>
 <tr class="memitem:aeba9de39364b9303b517ed03898d13c5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classone__bit__full__adder.html#aeba9de39364b9303b517ed03898d13c5">c_o</a> &#160;</td><td class="memItemLeft" align="right" valign="top"> <b><b><span class="keywordflow">out</span><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <b><span class="keywordtype">std_logic</span><span class="vhdlchar"> </span></b></td></tr>
 <tr class="memdesc:aeba9de39364b9303b517ed03898d13c5"><td class="mdescLeft">&#160;</td><td class="mdescLeft">&#160;</td><td class="mdescRight">output carry  <a href="#aeba9de39364b9303b517ed03898d13c5"></a><br /></td></tr>
+<tr class="memitem:a4635a6d7fc35326b6168509d0f2bfca0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classone__bit__full__adder.html#a4635a6d7fc35326b6168509d0f2bfca0">sum_o</a> &#160;</td><td class="memItemLeft" align="right" valign="top"> <b><b><span class="keywordflow">out</span><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <b><span class="keywordtype">std_logic</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memdesc:a4635a6d7fc35326b6168509d0f2bfca0"><td class="mdescLeft">&#160;</td><td class="mdescLeft">&#160;</td><td class="mdescRight">Sum of the input bits.  <a href="#a4635a6d7fc35326b6168509d0f2bfca0"></a><br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >one-bit full adder </p>
-<p >Adds two input bits a_i and b_i together with the input carry c_i, producing the sum bit s_o and the output carry c_o. </p>
+<p >One-bit full adder.</p>
+<p >Adds two input bits a_i and b_i together with the input carry c_i, producing the sum bit s_o and the output carry c_o.</p>
+<p >One-bit full adder that adds a bit of the first operand, a bit of the second operand and the carry from the previous stage. The outputs are the sum of these three bits and the carry to the next stage. The circuit is purely combinational. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a2f772a9dbd3efd382f883839850f3b82" name="a2f772a9dbd3efd382f883839850f3b82"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2f772a9dbd3efd382f883839850f3b82">&#9670;&#160;</a></span>a_i</h2>
@@ -142,6 +146,7 @@ Ports</h2></td></tr>
 </div><div class="memdoc">
 
 <p>first input bit </p>
+<p >Bit of the first operand. </p>
 
 </div>
 </div>
@@ -166,6 +171,7 @@ Ports</h2></td></tr>
 </div><div class="memdoc">
 
 <p>second input bit </p>
+<p >Bit of the second operand. </p>
 
 </div>
 </div>
@@ -190,6 +196,7 @@ Ports</h2></td></tr>
 </div><div class="memdoc">
 
 <p>input carry </p>
+<p >Carry from the previous stage. </p>
 
 </div>
 </div>
@@ -214,6 +221,7 @@ Ports</h2></td></tr>
 </div><div class="memdoc">
 
 <p>output carry </p>
+<p >Carry to the next stage. </p>
 
 </div>
 </div>
@@ -287,8 +295,33 @@ Ports</h2></td></tr>
 
 </div>
 </div>
-<hr/>The documentation for this design unit was generated from the following file:<ul>
-<li>17/<a class="el" href="one__bit__full__adder_8vhd.html">one_bit_full_adder.vhd</a></li>
+<a id="a4635a6d7fc35326b6168509d0f2bfca0" name="a4635a6d7fc35326b6168509d0f2bfca0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4635a6d7fc35326b6168509d0f2bfca0">&#9670;&#160;</a></span>sum_o</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classone__bit__full__adder.html#a4635a6d7fc35326b6168509d0f2bfca0">sum_o</a> <b><span class="keywordflow">out</span><span class="vhdlchar"> </span></b> <b><span class="keywordtype">std_logic</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Port</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sum of the input bits. </p>
+
+</div>
+</div>
+<hr/>The documentation for this design unit was generated from the following files:<ul>
+<li>17/<a class="el" href="17_2one__bit__full__adder_8vhd.html">one_bit_full_adder.vhd</a></li>
+<li>18/<a class="el" href="18_2one__bit__full__adder_8vhd.html">one_bit_full_adder.vhd</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
