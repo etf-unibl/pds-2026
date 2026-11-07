@@ -37,13 +37,15 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+--! @brief Exhaustive testbench for the four-bit full subtractor.
+--! @details Has no ports. Reports an error through an assertion on any
+--! mismatch, and reports completion after all input combinations pass.
+
 entity four_bit_full_subtractor_tb is
--- Testbench entitet nema portove
 end entity four_bit_full_subtractor_tb;
 
 architecture arch of four_bit_full_subtractor_tb is
 
-  -- 1. Deklaracija komponente koja se testira (UUT)
   component four_bit_full_subtractor is
     port (
       a_i   : in    std_logic_vector(3 downto 0);
@@ -53,65 +55,93 @@ architecture arch of four_bit_full_subtractor_tb is
       c_o   : out   std_logic);
   end component four_bit_full_subtractor;
 
-  -- 2. Interni signali za povezivanje sa UUT
-  signal a_i_tb   : std_logic_vector(3 downto 0);
-  signal b_i_tb   : std_logic_vector(3 downto 0);
-  signal c_i_tb   : std_logic;
-  signal sub_o_tb : std_logic_vector(3 downto 0);
-  signal c_o_tb   : std_logic;
+  --! DUT input operands.
+  signal a_s   : std_logic_vector(3 downto 0);
+  signal b_s   : std_logic_vector(3 downto 0);
+  signal c_o_s : std_logic;
+
+  --! DUT outputs: difference and final borrow.
+  signal sub_s : std_logic_vector(3 downto 0);
+  signal c_i_s : std_logic;
 
 begin
 
-  -- 3. Instanciranje jedinice koja se testira (Port Map)
-  uut : component four_bit_full_subtractor
+  --! Device under test.
+  dut : component four_bit_full_subtractor
     port map (
-      a_i   => a_i_tb,
-      b_i   => b_i_tb,
-      c_i   => c_i_tb,
-      sub_o => sub_o_tb,
-      c_o   => c_o_tb);
+      a_i   => a_s,
+      b_i   => b_s,
+      c_i   => c_i_s,
+      sub_o => sub_s,
+      c_o   => c_o_s);
 
-  -- 4. Proces za generisanje stimulusa (Testni scenariji)
-  stim_proc : process is
+  --! Exhaustively apply every operand and borrow-in combination.
+  stimulus : process is
+
+    variable arithmetic_result   : integer;
+    variable expected_difference : integer;
+    variable expected_borrow     : std_logic;
+    variable tested_cases        : integer;
+
   begin
 
-    -- Vrijeme stabilizacije na pocetku
-    wait for 20 ns;
+    for a_value in 0 to 15 loop
 
-    -- Test 1: Standardno oduzimanje bez pozajmice (7 - 3 = 4)
-    a_i_tb <= "0111"; -- 7
-    b_i_tb <= "0011"; -- 3
-    c_i_tb <= '0';
-    wait for 20 ns;
+      for b_value in 0 to 15 loop
 
-    -- Test 2: Rezultat nula (12 - 12 = 0)
-    a_i_tb <= "1100"; -- 12
-    b_i_tb <= "1100"; -- 12
-    c_i_tb <= '0';
-    wait for 20 ns;
+        for borrow_in in 0 to 1 loop
 
-    -- Test 3: Maksimalne vrijednosti (15 - 1 = 14)
-    a_i_tb <= "1111"; -- 15
-    b_i_tb <= "0001"; -- 1
-    c_i_tb <= '0';
-    wait for 20 ns;
+          a_s <= std_logic_vector(to_unsigned(a_value, a_s'length));
+          b_s <= std_logic_vector(to_unsigned(b_value, b_s'length));
 
-    -- Test 4: Negativan rezultat / Underflow (2 - 5 = -3)
-    -- U 4-bitnom neoznacenom kodu ovo daje "1101" (13) uz izlaznu pozajmicu c_o = '1'
-    a_i_tb <= "0010"; -- 2
-    b_i_tb <= "0101"; -- 5
-    c_i_tb <= '0';
-    wait for 20 ns;
+          if borrow_in = 0 then
+            c_i_s <= '0';
+          else
+            c_i_s <= '1';
+          end if;
 
-    -- Test 5: Oduzimanje uz prisustvo ulazne pozajmice c_i (10 - 4 - 1 = 5)
-    a_i_tb <= "1010"; -- 10
-    b_i_tb <= "0100"; -- 4
-    c_i_tb <= '1';    -- c_i aktivno
-    wait for 20 ns;
+          -- Allow combinational DUT logic to settle.
+          wait for 10 ns;
 
-    -- Kraj simulacije
+          -- Calculate the mathematical subtraction and wrap the difference
+          -- into the range 0..15, as represented by the four-bit output.
+          arithmetic_result := a_value - b_value - borrow_in;
+
+          if arithmetic_result < 0 then
+            expected_borrow     := '1';
+            expected_difference := arithmetic_result + 16;
+          else
+            expected_borrow     := '0';
+            expected_difference := arithmetic_result;
+          end if;
+
+          assert sub_s = std_logic_vector(to_unsigned(expected_difference, sub_s'length))
+            report "Difference mismatch: a=" & integer'image(a_value) &
+                   ", b=" & integer'image(b_value) &
+                   ", c_i=" & integer'image(borrow_in) &
+                   ", expected=" & integer'image(expected_difference)
+            severity error;
+
+          assert c_o_s = expected_borrow
+            report "Borrow mismatch: a=" & integer'image(a_value) &
+                   ", b=" & integer'image(b_value) &
+                   ", c_i=" & integer'image(borrow_in) &
+                   ", expected borrow=" & std_logic'image(expected_borrow)
+            severity error;
+
+          tested_cases := tested_cases + 1;
+
+        end loop;
+
+      end loop;
+
+    end loop;
+
+    report "PASS: all " & integer'image(tested_cases) &
+           " four-bit subtractor input combinations passed."
+      severity note;
     wait;
 
-  end process stim_proc;
+  end process stimulus;
 
 end architecture arch;

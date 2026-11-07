@@ -31,26 +31,26 @@
 -----------------------------------------------------------------------------
 
 --! @file
---! @brief one bit full subtractor
+--! @brief four bit full subtractor
 
 library ieee;
 use ieee.std_logic_1164.all;
 
---! @brief one bit full subtractor
+--! @brief port of four bit gull subtractor
 --! @details Inputs are four bit numbers A, B and one bit carry in. Outputs are difference (sub_o) and carry out bit.
 
 entity four_bit_full_subtractor is
   port (
-    a_i   : in    std_logic_vector(3 downto 0);
-    b_i   : in    std_logic_vector(3 downto 0);
-    c_i   : in    std_logic;
-    sub_o : out   std_logic_vector(3 downto 0);
-    c_o   : out   std_logic);
+    a_i   : in    std_logic_vector(3 downto 0); --! four bit firts term
+    b_i   : in    std_logic_vector(3 downto 0); --! four bit second term
+    c_i   : in    std_logic;                    --! carry in port
+    sub_o : out   std_logic_vector(3 downto 0); --! four bit difference
+    c_o   : out   std_logic);                   --! '1' if x_i = 0 and y_i = 1 else '0'
 end entity four_bit_full_subtractor;
 
---! @brief Dataflow architecture of four bit full subtractor
---! @details four bit full subtroctor is made using four one_bit_full_subtractror components
---! and carry_s signal for conecting carry in and carry out ports.
+--! @brief Structural architecture of four bit full subtractor
+--! @details four bit full subtractor is made using four one_bit_full_subtractor components
+--! and carry_s signal for connecting carry in and carry out ports.
 
 architecture arch of four_bit_full_subtractor is
 
@@ -64,6 +64,7 @@ architecture arch of four_bit_full_subtractor is
   end component one_bit_full_subtractor;
 
   signal carry_s : std_logic_vector(2 downto 0);
+--! vector for conectin carry_i and carry_o ports of components
 
 begin
 
