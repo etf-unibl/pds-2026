@@ -35,7 +35,6 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
 
 entity one_bit_full_subtractor_tb is
 end entity one_bit_full_subtractor_tb;

@@ -58,11 +58,11 @@ architecture arch of four_bit_full_subtractor_tb is
   --! DUT input operands.
   signal a_s   : std_logic_vector(3 downto 0);
   signal b_s   : std_logic_vector(3 downto 0);
-  signal c_o_s : std_logic;
+  signal c_i_s : std_logic;
 
   --! DUT outputs: difference and final borrow.
   signal sub_s : std_logic_vector(3 downto 0);
-  signal c_i_s : std_logic;
+  signal c_o_s : std_logic;
 
 begin
 
@@ -78,12 +78,14 @@ begin
   --! Exhaustively apply every operand and borrow-in combination.
   stimulus : process is
 
+    variable tested_cases        : integer;
     variable arithmetic_result   : integer;
     variable expected_difference : integer;
     variable expected_borrow     : std_logic;
-    variable tested_cases        : integer;
 
   begin
+
+    tested_cases := 0;
 
     for a_value in 0 to 15 loop
 

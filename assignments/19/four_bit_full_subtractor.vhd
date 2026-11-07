@@ -4,7 +4,7 @@
 --
 -- description:
 --
---   This file implements a simple full subtractor circuit.
+--   This file implements a simple four bit full subtractor circuit.
 --
 -----------------------------------------------------------------------------
 -- The MIT License
@@ -36,16 +36,16 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
---! @brief port of four bit gull subtractor
+--! @brief port of four bit full subtractor
 --! @details Inputs are four bit numbers A, B and one bit carry in. Outputs are difference (sub_o) and carry out bit.
 
 entity four_bit_full_subtractor is
   port (
-    a_i   : in    std_logic_vector(3 downto 0); --! four bit firts term
+    a_i   : in    std_logic_vector(3 downto 0); --! four bit first term
     b_i   : in    std_logic_vector(3 downto 0); --! four bit second term
     c_i   : in    std_logic;                    --! carry in port
     sub_o : out   std_logic_vector(3 downto 0); --! four bit difference
-    c_o   : out   std_logic);                   --! '1' if x_i = 0 and y_i = 1 else '0'
+    c_o   : out   std_logic);                   --! '1' if a_i - b_i - c_ i < 0 else '0'
 end entity four_bit_full_subtractor;
 
 --! @brief Structural architecture of four bit full subtractor
@@ -63,11 +63,12 @@ architecture arch of four_bit_full_subtractor is
       carry_o    : out   std_logic);
   end component one_bit_full_subtractor;
 
+  --! vector for connecting carry_i and carry_o ports of components
   signal carry_s : std_logic_vector(2 downto 0);
---! vector for conectin carry_i and carry_o ports of components
 
 begin
 
+  --! first bit subtractor
   fs0 : component one_bit_full_subtractor
     port map (
       x_i        => a_i(0),
@@ -76,6 +77,7 @@ begin
       subtract_o => sub_o(0),
       carry_o    => carry_s(0));
 
+  --! second bit subtractor
   fs1 : component one_bit_full_subtractor
     port map (
       x_i        => a_i(1),
@@ -84,6 +86,7 @@ begin
       subtract_o => sub_o(1),
       carry_o    => carry_s(1));
 
+  --! third bit subtractor
   fs2 : component one_bit_full_subtractor
     port map (
       x_i        => a_i(2),
@@ -92,6 +95,7 @@ begin
       subtract_o => sub_o(2),
       carry_o    => carry_s(2));
 
+  --! fourth bit subtractor
   fs3 : component one_bit_full_subtractor
     port map (
       x_i        => a_i(3),

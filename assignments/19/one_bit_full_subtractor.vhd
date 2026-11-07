@@ -45,11 +45,11 @@ entity one_bit_full_subtractor is
     y_i        : in    std_logic;  --! second term
     carry_i    : in    std_logic;  --! carry in port
     subtract_o : out   std_logic;  --! difference of terms
-    carry_o    : out   std_logic); --! '1' if x_i = 0 and y_i = 1 else '0'
+    carry_o    : out   std_logic); --! '1' if x_i -y_i - carry_i < 0 else '0'
 end entity one_bit_full_subtractor;
 
 --! @brief Dataflow architecture of one bit full subtractor
---! @details Full one bit subtractor is described using concurrent sequential logic.
+--! @details Full one bit subtractor is described using combinational logic using selectional concurrent statement.
 --! @details Subtract port will be in high logic state if number of high logic states inputs is odd.
 --! @details Carry out will be in high input state if X input port is in low logic state
 --! while either Y input port or Carry in port are in high logic state
