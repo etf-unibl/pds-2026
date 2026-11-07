@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['test_0',['test',['../classtest.html',1,'']]],
-  ['test_2evhd_1',['test.vhd',['../2_2test_8vhd.html',1,'(Global Namespace)'],['../3_2test_8vhd.html',1,'(Global Namespace)'],['../4_2test_8vhd.html',1,'(Global Namespace)'],['../5_2test_8vhd.html',1,'(Global Namespace)'],['../6_2test_8vhd.html',1,'(Global Namespace)'],['../7_2test_8vhd.html',1,'(Global Namespace)']]],
-  ['two_5fbit_5fcomparator_2',['two_bit_comparator',['../classtwo__bit__comparator.html',1,'two_bit_comparator'],['../classfour__bit__comparator_1_1arch.html#a25b402fcefbb9dd58726cda4400e467e',1,'four_bit_comparator.arch.two_bit_comparator()']]],
-  ['two_5fbit_5fcomparator_2evhd_3',['two_bit_comparator.vhd',['../two__bit__comparator_8vhd.html',1,'']]]
+  ['s_5fo_0',['s_o',['../classone__bit__full__adder.html#af1a502c254608b4c69c317f0f873735d',1,'one_bit_full_adder']]],
+  ['std_5flogic_5f1164_1',['std_logic_1164',['../classnand2__gate.html#acd03516902501cd1c7296a98e22c6fcb',1,'nand2_gate.std_logic_1164()'],['../classfour__bit__full__adder.html#acd03516902501cd1c7296a98e22c6fcb',1,'four_bit_full_adder.std_logic_1164()'],['../classone__bit__full__adder.html#acd03516902501cd1c7296a98e22c6fcb',1,'one_bit_full_adder.std_logic_1164()'],['../classtest.html#acd03516902501cd1c7296a98e22c6fcb',1,'test.std_logic_1164()'],['../classfour__bit__full__subtractor.html#acd03516902501cd1c7296a98e22c6fcb',1,'four_bit_full_subtractor.std_logic_1164()'],['../classfull__subtractor.html#acd03516902501cd1c7296a98e22c6fcb',1,'full_subtractor.std_logic_1164()'],['../classfour__bit__comparator.html#acd03516902501cd1c7296a98e22c6fcb',1,'four_bit_comparator.std_logic_1164()'],['../classtwo__bit__comparator.html#acd03516902501cd1c7296a98e22c6fcb',1,'two_bit_comparator.std_logic_1164()']]],
+  ['sub_5fo_2',['sub_o',['../classfour__bit__full__subtractor.html#a77b62a79176b7153b8e54394915aacaa',1,'four_bit_full_subtractor']]],
+  ['sum_5fo_3',['sum_o',['../classfour__bit__full__adder.html#a4cc434c0802d0fdac145ba72375e8556',1,'four_bit_full_adder.sum_o()'],['../classone__bit__full__adder.html#a4635a6d7fc35326b6168509d0f2bfca0',1,'one_bit_full_adder.sum_o()']]]
 ];

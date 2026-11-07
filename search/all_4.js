@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['four_5fbit_5fcomparator_0',['four_bit_comparator',['../classfour__bit__comparator.html',1,'']]],
-  ['four_5fbit_5fcomparator_2evhd_1',['four_bit_comparator.vhd',['../four__bit__comparator_8vhd.html',1,'']]],
-  ['four_5fbit_5ffull_5fadder_2',['four_bit_full_adder',['../classfour__bit__full__adder.html',1,'']]],
-  ['four_5fbit_5ffull_5fadder_2evhd_3',['four_bit_full_adder.vhd',['../17_2four__bit__full__adder_8vhd.html',1,'(Global Namespace)'],['../18_2four__bit__full__adder_8vhd.html',1,'(Global Namespace)']]]
+  ['eq_5fhigh_0',['eq_high',['../classfour__bit__comparator_1_1arch.html#af01389bf5115646b53cc6aaa50a85580',1,'four_bit_comparator::arch']]],
+  ['eq_5flow_1',['eq_low',['../classfour__bit__comparator_1_1arch.html#ae1a7211e3da63335f74691cc60c8bddf',1,'four_bit_comparator::arch']]]
 ];
