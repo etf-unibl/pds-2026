@@ -66,9 +66,11 @@ architecture arch of four_bit_full_subtractor is
       bout_o : out   std_logic);
   end component full_subtractor;
 
-  --! @brief Internal borrow signals between stages
+  --! @brief Borrow signal from stage 0 to stage 1
   signal b0 : std_logic;
+  --! @brief Borrow signal from stage 1 to stage 2
   signal b1 : std_logic;
+  --! @brief Borrow signal from stage 2 to stage 3
   signal b2 : std_logic;
 
 begin

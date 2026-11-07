@@ -57,18 +57,21 @@ end entity full_subtractor;
 
 architecture arch of full_subtractor is
 
+  --! @brief Concatenated input vector for truth table lookup
+  signal xyz : std_logic_vector(2 downto 0);
+
 begin
 
-  d_o <= '1' when std_logic_vector'(x_i & y_i & bin_i) = "001" else
-         '1' when std_logic_vector'(x_i & y_i & bin_i) = "010" else
-         '1' when std_logic_vector'(x_i & y_i & bin_i) = "100" else
-         '1' when std_logic_vector'(x_i & y_i & bin_i) = "111" else
-         '0';
-
-  bout_o <= '1' when std_logic_vector'(x_i & y_i & bin_i) = "001" else
-            '1' when std_logic_vector'(x_i & y_i & bin_i) = "010" else
-            '1' when std_logic_vector'(x_i & y_i & bin_i) = "011" else
-            '1' when std_logic_vector'(x_i & y_i & bin_i) = "111" else
+  xyz    <= x_i & y_i & bin_i;
+  d_o    <= '1' when xyz = "001" else
+            '1' when xyz = "010" else
+            '1' when xyz = "100" else
+            '1' when xyz = "111" else
+            '0';
+  bout_o <= '1' when xyz = "001" else
+            '1' when xyz = "010" else
+            '1' when xyz = "011" else
+            '1' when xyz = "111" else
             '0';
 
 end architecture arch;

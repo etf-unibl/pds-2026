@@ -36,14 +36,13 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-
 --! @brief Testbench entity for the 4-bit full subtractor
 
 entity four_bit_full_subtractor_tb is
 end entity four_bit_full_subtractor_tb;
 
 --! @brief Testbench architecture
---! @details Applies test vectors and checks the subtraction result.
+--! @details Applies all 512 input combinations and checks the subtraction result.
 
 architecture arch of four_bit_full_subtractor_tb is
 
@@ -76,76 +75,77 @@ begin
       c_o   => cout);
 
   --! @brief Stimulus and self-checking process
+  --! @details Iterates through all 512 input combinations (16x16x2),
+  --!          calculates expected results using numeric_std, and counts errors.
   stim : process is
 
-    variable v_a, v_b : unsigned(3 downto 0);
-    variable v_cin    : unsigned(0 downto 0);
-    variable v_result : unsigned(4 downto 0);
+    variable v_a      : unsigned(3 downto 0);
+    variable v_b      : unsigned(3 downto 0);
+    variable v_cin    : std_logic;
+    variable v_diff   : integer;
+    variable v_sub    : unsigned(3 downto 0);
+    variable v_cout   : std_logic;
+    variable v_errors : integer;
 
   begin
 
-    -- Test 1: 5 - 3 - 0 = 2, no borrow out
-    a   <= "0101";
-    b   <= "0011";
-    cin <= '0';
-    wait for 10 ns;
-    assert sub = "0010"
-      report "Failed test 1: 5 - 3 - 0"
-      severity error;
-    assert cout = '0'
-      report "Failed test 1: borrow out should be 0"
-      severity error;
+    v_errors := 0;
 
-    -- Test 2: 3 - 5 - 0 = -2 (14 with borrow), borrow out = 1
-    a   <= "0011";
-    b   <= "0101";
-    cin <= '0';
-    wait for 10 ns;
-    assert sub = "1110"
-      report "Failed test 2: 3 - 5 - 0"
-      severity error;
-    assert cout = '1'
-      report "Failed test 2: borrow out should be 1"
-      severity error;
+    for i in 0 to 15 loop
 
-    -- Test 3: 7 - 2 - 1 = 4, no borrow out
-    a   <= "0111";
-    b   <= "0010";
-    cin <= '1';
-    wait for 10 ns;
-    assert sub = "0100"
-      report "Failed test 3: 7 - 2 - 1"
-      severity error;
-    assert cout = '0'
-      report "Failed test 3: borrow out should be 0"
-      severity error;
+      for j in 0 to 15 loop
 
-    -- Test 4: 0 - 0 - 1 = 15 with borrow, borrow out = 1
-    a   <= "0000";
-    b   <= "0000";
-    cin <= '1';
-    wait for 10 ns;
-    assert sub = "1111"
-      report "Failed test 4: 0 - 0 - 1"
-      severity error;
-    assert cout = '1'
-      report "Failed test 4: borrow out should be 1"
-      severity error;
+        for k in 0 to 1 loop
 
-    -- Test 5: 15 - 0 - 0 = 15, no borrow out
-    a   <= "1111";
-    b   <= "0000";
-    cin <= '0';
-    wait for 10 ns;
-    assert sub = "1111"
-      report "Failed test 5: 15 - 0 - 0"
-      severity error;
-    assert cout = '0'
-      report "Failed test 5: borrow out should be 0"
-      severity error;
+          v_a := to_unsigned(i, 4);
+          v_b := to_unsigned(j, 4);
 
-    report "Testbench finished successfully"
-      severity note;
+          if k = 0 then
+            v_cin := '0';
+          else
+            v_cin := '1';
+          end if;
+
+          a      <= std_logic_vector(v_a);
+          b      <= std_logic_vector(v_b);
+          cin    <= v_cin;
+          wait for 10 ns;
+          v_diff := i - j - k;
+
+          if v_diff < 0 then
+            v_cout := '1';
+            v_sub  := to_unsigned(v_diff + 16, 4);
+          else
+            v_cout := '0';
+            v_sub  := to_unsigned(v_diff, 4);
+          end if;
+
+          if sub /= std_logic_vector(v_sub) then
+            report "Failed: " & integer'image(i) & " - " & integer'image(j) & " - " & integer'image(k) & " sub mismatch"
+              severity error;
+            v_errors := v_errors + 1;
+          end if;
+
+          if cout /= v_cout then
+            report "Failed: " & integer'image(i) & " - " & integer'image(j) & " - " & integer'image(k) & " cout mismatch"
+              severity error;
+            v_errors := v_errors + 1;
+          end if;
+
+        end loop;
+
+      end loop;
+
+    end loop;
+
+    if v_errors = 0 then
+      report "Testbench finished successfully: all 512 combinations passed"
+        severity note;
+    else
+      report "Testbench finished with " & integer'image(v_errors) & " error(s)"
+        severity error;
+    end if;
+
     wait;
 
   end process stim;
