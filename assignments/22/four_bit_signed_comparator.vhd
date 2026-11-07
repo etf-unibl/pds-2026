@@ -43,9 +43,9 @@ use ieee.numeric_std.all;
 
 entity four_bit_signed_comparator is
   port (
-    a_i    : in    std_logic_vector(3 downto 0);
-    b_i    : in    std_logic_vector(3 downto 0);
-    agtb_o : out   std_logic);
+    a_i    : in    std_logic_vector(3 downto 0); --! First operand
+    b_i    : in    std_logic_vector(3 downto 0); --! Second operand
+    agtb_o : out   std_logic);                   --! Output:'1' when a_i > b_i, otherwise '0'
 end entity four_bit_signed_comparator;
 
 --! @brief Dataflow architecture of the 4-bit signed comparator
