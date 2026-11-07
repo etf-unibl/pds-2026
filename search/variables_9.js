@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['y_5fo_0',['y_o',['../classnand2__gate.html#aedcf1485d2cff9a24e6f43f03c362565',1,'nand2_gate.y_o()'],['../classtest.html#aedcf1485d2cff9a24e6f43f03c362565',1,'test.y_o()']]]
+  ['two_5fbit_5fcomparator_0',['two_bit_comparator',['../classfour__bit__comparator_1_1arch.html#a25b402fcefbb9dd58726cda4400e467e',1,'four_bit_comparator::arch']]]
 ];

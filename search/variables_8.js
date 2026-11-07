@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['two_5fbit_5fcomparator_0',['two_bit_comparator',['../classfour__bit__comparator_1_1arch.html#a25b402fcefbb9dd58726cda4400e467e',1,'four_bit_comparator::arch']]]
+  ['s_5fo_0',['s_o',['../classone__bit__full__adder.html#af1a502c254608b4c69c317f0f873735d',1,'one_bit_full_adder']]],
+  ['std_5flogic_5f1164_1',['std_logic_1164',['../classnand2__gate.html#acd03516902501cd1c7296a98e22c6fcb',1,'nand2_gate.std_logic_1164()'],['../classfour__bit__full__adder.html#acd03516902501cd1c7296a98e22c6fcb',1,'four_bit_full_adder.std_logic_1164()'],['../classone__bit__full__adder.html#acd03516902501cd1c7296a98e22c6fcb',1,'one_bit_full_adder.std_logic_1164()'],['../classtest.html#acd03516902501cd1c7296a98e22c6fcb',1,'test.std_logic_1164()'],['../classfour__bit__comparator.html#acd03516902501cd1c7296a98e22c6fcb',1,'four_bit_comparator.std_logic_1164()'],['../classtwo__bit__comparator.html#acd03516902501cd1c7296a98e22c6fcb',1,'two_bit_comparator.std_logic_1164()']]],
+  ['sum_5fo_2',['sum_o',['../classfour__bit__full__adder.html#a4cc434c0802d0fdac145ba72375e8556',1,'four_bit_full_adder']]]
 ];
