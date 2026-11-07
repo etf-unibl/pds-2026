@@ -81,18 +81,21 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Structural architecture of the 4-bit full subtractor.  
+<p>Structural architecture of four bit full subtractor.  
  <a href="classfour__bit__full__subtractor_1_1arch.html#details">More...</a></p>
 <b>Architecture &gt;&gt; </b><a class="el" href="classfour__bit__full__subtractor_1_1arch.html">arch</a><br />
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="Components" name="Components"></a>
 Components</h2></td></tr>
- <tr class="memitem:a129545662b8c96b05270f72f29dc7b46"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#a129545662b8c96b05270f72f29dc7b46">full_subtractor</a>&#160;</td><td class="memItemRight" valign="bottom">  <b></b>  <em><a class="el" href="classfull__subtractor.html">&lt;Entity full_subtractor&gt; </a></em></td></tr>
+ <tr class="memitem:ab7842e904bc6f4b67c1e9026de78c3b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#ab7842e904bc6f4b67c1e9026de78c3b3">one_bit_full_subtractor</a>&#160;</td><td class="memItemRight" valign="bottom">  <b></b>  <em><a class="el" href="classone__bit__full__subtractor.html">&lt;Entity one_bit_full_subtractor&gt; </a></em></td></tr>
+<tr class="memitem:a129545662b8c96b05270f72f29dc7b46"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#a129545662b8c96b05270f72f29dc7b46">full_subtractor</a>&#160;</td><td class="memItemRight" valign="bottom">  <b></b>  <em><a class="el" href="classfull__subtractor.html">&lt;Entity full_subtractor&gt; </a></em></td></tr>
 <tr class="memdesc:a129545662b8c96b05270f72f29dc7b46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Component declaration for the 1-bit full subtractor.  <a href="#a129545662b8c96b05270f72f29dc7b46"></a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="Signals" name="Signals"></a>
 Signals</h2></td></tr>
- <tr class="memitem:a4e34cc024d6dc76269c9a27b17148971"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#a4e34cc024d6dc76269c9a27b17148971">b0</a> &#160;</td><td class="memItemRight" valign="bottom"><b><span class="keywordtype">std_logic</span><span class="vhdlchar"> </span></b></td></tr>
+ <tr class="memitem:a5088de4179e3f389220dc1dbd05d9d12"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#a5088de4179e3f389220dc1dbd05d9d12">carry_s</a> &#160;</td><td class="memItemRight" valign="bottom"><b><span class="keywordtype">std_logic_vector</span><span class="vhdlchar"> </span><span class="vhdlchar">(</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span> <span class="vhdldigit">2</span> <span class="vhdlchar"> </span><span class="keywordflow">downto</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span> <span class="vhdldigit">0</span> <span class="vhdlchar"> </span><span class="vhdlchar">)</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memdesc:a5088de4179e3f389220dc1dbd05d9d12"><td class="mdescLeft">&#160;</td><td class="mdescRight">vector for connecting carry_i and carry_o ports of components  <a href="#a5088de4179e3f389220dc1dbd05d9d12"></a><br /></td></tr>
+<tr class="memitem:a4e34cc024d6dc76269c9a27b17148971"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#a4e34cc024d6dc76269c9a27b17148971">b0</a> &#160;</td><td class="memItemRight" valign="bottom"><b><span class="keywordtype">std_logic</span><span class="vhdlchar"> </span></b></td></tr>
 <tr class="memdesc:a4e34cc024d6dc76269c9a27b17148971"><td class="mdescLeft">&#160;</td><td class="mdescRight">Borrow signal from stage 0 to stage 1.  <a href="#a4e34cc024d6dc76269c9a27b17148971"></a><br /></td></tr>
 <tr class="memitem:ae00a7c8752b2d71b6f08fd718833eab3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#ae00a7c8752b2d71b6f08fd718833eab3">b1</a> &#160;</td><td class="memItemRight" valign="bottom"><b><span class="keywordtype">std_logic</span><span class="vhdlchar"> </span></b></td></tr>
 <tr class="memdesc:ae00a7c8752b2d71b6f08fd718833eab3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Borrow signal from stage 1 to stage 2.  <a href="#ae00a7c8752b2d71b6f08fd718833eab3"></a><br /></td></tr>
@@ -101,7 +104,15 @@ Signals</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="Instantiations" name="Instantiations"></a>
 Instantiations</h2></td></tr>
- <tr class="memitem:ad0bcba23fad97e70f8adb603eeaa8205"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#ad0bcba23fad97e70f8adb603eeaa8205">stage0</a>&#160;</td><td class="memItemRight" valign="bottom">  <b>full_subtractor</b>  <em><a class="el" href="classfull__subtractor.html">&lt;Entity full_subtractor&gt;</a></em></td></tr>
+ <tr class="memitem:a78fc1e211ace41cf49a4529141f6983c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#a78fc1e211ace41cf49a4529141f6983c">fs0</a>&#160;</td><td class="memItemRight" valign="bottom">  <b>one_bit_full_subtractor</b>  <em><a class="el" href="classone__bit__full__subtractor.html">&lt;Entity one_bit_full_subtractor&gt;</a></em></td></tr>
+<tr class="memdesc:a78fc1e211ace41cf49a4529141f6983c"><td class="mdescLeft">&#160;</td><td class="mdescRight">first bit subtractor  <a href="#a78fc1e211ace41cf49a4529141f6983c"></a><br /></td></tr>
+<tr class="memitem:a8435d19383f63fd1d6fe90863a846716"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#a8435d19383f63fd1d6fe90863a846716">fs1</a>&#160;</td><td class="memItemRight" valign="bottom">  <b>one_bit_full_subtractor</b>  <em><a class="el" href="classone__bit__full__subtractor.html">&lt;Entity one_bit_full_subtractor&gt;</a></em></td></tr>
+<tr class="memdesc:a8435d19383f63fd1d6fe90863a846716"><td class="mdescLeft">&#160;</td><td class="mdescRight">second bit subtractor  <a href="#a8435d19383f63fd1d6fe90863a846716"></a><br /></td></tr>
+<tr class="memitem:a9efaa5ba6cae834593b59aba503ca317"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#a9efaa5ba6cae834593b59aba503ca317">fs2</a>&#160;</td><td class="memItemRight" valign="bottom">  <b>one_bit_full_subtractor</b>  <em><a class="el" href="classone__bit__full__subtractor.html">&lt;Entity one_bit_full_subtractor&gt;</a></em></td></tr>
+<tr class="memdesc:a9efaa5ba6cae834593b59aba503ca317"><td class="mdescLeft">&#160;</td><td class="mdescRight">third bit subtractor  <a href="#a9efaa5ba6cae834593b59aba503ca317"></a><br /></td></tr>
+<tr class="memitem:afd69f55aa0342b0070718e7e937b7a22"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#afd69f55aa0342b0070718e7e937b7a22">fs3</a>&#160;</td><td class="memItemRight" valign="bottom">  <b>one_bit_full_subtractor</b>  <em><a class="el" href="classone__bit__full__subtractor.html">&lt;Entity one_bit_full_subtractor&gt;</a></em></td></tr>
+<tr class="memdesc:afd69f55aa0342b0070718e7e937b7a22"><td class="mdescLeft">&#160;</td><td class="mdescRight">fourth bit subtractor  <a href="#afd69f55aa0342b0070718e7e937b7a22"></a><br /></td></tr>
+<tr class="memitem:ad0bcba23fad97e70f8adb603eeaa8205"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#ad0bcba23fad97e70f8adb603eeaa8205">stage0</a>&#160;</td><td class="memItemRight" valign="bottom">  <b>full_subtractor</b>  <em><a class="el" href="classfull__subtractor.html">&lt;Entity full_subtractor&gt;</a></em></td></tr>
 <tr class="memdesc:ad0bcba23fad97e70f8adb603eeaa8205"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stage 0: least significant bit.  <a href="#ad0bcba23fad97e70f8adb603eeaa8205"></a><br /></td></tr>
 <tr class="memitem:a6b2af4b57e0fbddb71043a707d3ffd96"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#a6b2af4b57e0fbddb71043a707d3ffd96">stage1</a>&#160;</td><td class="memItemRight" valign="bottom">  <b>full_subtractor</b>  <em><a class="el" href="classfull__subtractor.html">&lt;Entity full_subtractor&gt;</a></em></td></tr>
 <tr class="memdesc:a6b2af4b57e0fbddb71043a707d3ffd96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stage 1.  <a href="#a6b2af4b57e0fbddb71043a707d3ffd96"></a><br /></td></tr>
@@ -111,7 +122,9 @@ Instantiations</h2></td></tr>
 <tr class="memdesc:ab06378cc306e83fe5a4cfb2cb9327b28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stage 3: most significant bit.  <a href="#ab06378cc306e83fe5a4cfb2cb9327b28"></a><br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Structural architecture of the 4-bit full subtractor. </p>
+<div class="textblock"><p >Structural architecture of four bit full subtractor. </p>
+<p >Structural architecture of the 4-bit full subtractor.</p>
+<p >four bit full subtractor is made using four <a class="el" href="classone__bit__full__subtractor.html" title="one bit full subtractor">one_bit_full_subtractor</a> components and carry_s signal for connecting carry in and carry out ports.</p>
 <p >Instantiates four 1-bit full subtractors with ripple borrow. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a4e34cc024d6dc76269c9a27b17148971" name="a4e34cc024d6dc76269c9a27b17148971"></a>
@@ -186,6 +199,126 @@ Instantiations</h2></td></tr>
 
 </div>
 </div>
+<a id="a5088de4179e3f389220dc1dbd05d9d12" name="a5088de4179e3f389220dc1dbd05d9d12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5088de4179e3f389220dc1dbd05d9d12">&#9670;&#160;</a></span>carry_s</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#a5088de4179e3f389220dc1dbd05d9d12">carry_s</a> <b><span class="keywordtype">std_logic_vector</span><span class="vhdlchar"> </span><span class="vhdlchar">(</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span> <span class="vhdldigit">2</span> <span class="vhdlchar"> </span><span class="keywordflow">downto</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span> <span class="vhdldigit">0</span> <span class="vhdlchar"> </span><span class="vhdlchar">)</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>vector for connecting carry_i and carry_o ports of components </p>
+
+</div>
+</div>
+<a id="a78fc1e211ace41cf49a4529141f6983c" name="a78fc1e211ace41cf49a4529141f6983c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78fc1e211ace41cf49a4529141f6983c">&#9670;&#160;</a></span>fs0</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#a78fc1e211ace41cf49a4529141f6983c">fs0</a> <b><span class="vhdlchar">one_bit_full_subtractor</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Instantiation</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>first bit subtractor </p>
+
+</div>
+</div>
+<a id="a8435d19383f63fd1d6fe90863a846716" name="a8435d19383f63fd1d6fe90863a846716"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8435d19383f63fd1d6fe90863a846716">&#9670;&#160;</a></span>fs1</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#a8435d19383f63fd1d6fe90863a846716">fs1</a> <b><span class="vhdlchar">one_bit_full_subtractor</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Instantiation</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>second bit subtractor </p>
+
+</div>
+</div>
+<a id="a9efaa5ba6cae834593b59aba503ca317" name="a9efaa5ba6cae834593b59aba503ca317"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9efaa5ba6cae834593b59aba503ca317">&#9670;&#160;</a></span>fs2</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#a9efaa5ba6cae834593b59aba503ca317">fs2</a> <b><span class="vhdlchar">one_bit_full_subtractor</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Instantiation</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>third bit subtractor </p>
+
+</div>
+</div>
+<a id="afd69f55aa0342b0070718e7e937b7a22" name="afd69f55aa0342b0070718e7e937b7a22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd69f55aa0342b0070718e7e937b7a22">&#9670;&#160;</a></span>fs3</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#afd69f55aa0342b0070718e7e937b7a22">fs3</a> <b><span class="vhdlchar">one_bit_full_subtractor</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Instantiation</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>fourth bit subtractor </p>
+
+</div>
+</div>
 <a id="a129545662b8c96b05270f72f29dc7b46" name="a129545662b8c96b05270f72f29dc7b46"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a129545662b8c96b05270f72f29dc7b46">&#9670;&#160;</a></span>full_subtractor</h2>
 
@@ -207,6 +340,28 @@ Instantiations</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Component declaration for the 1-bit full subtractor. </p>
+
+</div>
+</div>
+<a id="ab7842e904bc6f4b67c1e9026de78c3b3" name="ab7842e904bc6f4b67c1e9026de78c3b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7842e904bc6f4b67c1e9026de78c3b3">&#9670;&#160;</a></span>one_bit_full_subtractor</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classfour__bit__full__subtractor_1_1arch.html#ab7842e904bc6f4b67c1e9026de78c3b3">one_bit_full_subtractor</a> <b><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Component</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -306,8 +461,9 @@ Instantiations</h2></td></tr>
 
 </div>
 </div>
-<hr/>The documentation for this design unit was generated from the following file:<ul>
-<li>20/<a class="el" href="four__bit__full__subtractor_8vhd.html">four_bit_full_subtractor.vhd</a></li>
+<hr/>The documentation for this design unit was generated from the following files:<ul>
+<li>19/<a class="el" href="19_2four__bit__full__subtractor_8vhd.html">four_bit_full_subtractor.vhd</a></li>
+<li>20/<a class="el" href="20_2four__bit__full__subtractor_8vhd.html">four_bit_full_subtractor.vhd</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
