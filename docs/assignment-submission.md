@@ -24,7 +24,7 @@ assignments/
 - Naziv foldera sadrži samo broj zadatka, bez znaka `#` i drugih dodataka.
 - Nazivi fajlova, entiteta i portova moraju biti tačno onakvi kako su navedeni u postavci zadatka, jer ih automatski testovi koriste za pokretanje simulacije i sinteze.
 - *Testbench* za dizajn `<dizajn>` nalazi se u fajlu `<dizajn>_tb.vhd`, a njegov entitet se zove `<dizajn>_tb` (npr. `nand2_tb` u fajlu `nand2_tb.vhd`). Svaki takav fajl se automatski simulira ([Simulacija i testiranje](simulation-and-testing.md#automatsko-pokretanje-testbench-fajlova)).
-- U folder se smještaju samo izvorni fajlovi (VHDL opisi, *testbench* fajlovi, fajlovi sa testnim podacima i ograničenjima, npr. `.sdc`, ako ih zadatak zahtijeva). Fajlovi koje generišu alati (folderi `db`, `simulation`, `work`, `html`, talasni oblici, izvještaji i sl.) se ne predaju. Većina ih je već navedena u fajlu `.gitignore`.
+- U folder se smještaju samo izvorni fajlovi (VHDL opisi, *testbench* fajlovi, fajlovi sa testnim podacima i ograničenjima, npr. `.sdc`, ako ih zadatak zahtijeva) i slike za dokumentaciju u folderu `images` ([Slike u dokumentaciji](design-documentation.md#slike-u-dokumentaciji)). Fajlovi koje generišu alati (folderi `db`, `simulation`, `work`, `html`, talasni oblici, izvještaji i sl.) se ne predaju. Većina ih je već navedena u fajlu `.gitignore`.
 - Izmjene izvan foldera `assignments/<N>` (dodavanje, izmjena, brisanje ili premještanje fajlova) nisu dozvoljene i automatska provjera ih odbija.
 - Formatiranje sadržaja fajlova propisano je uputstvom [Pravila za formatiranje VHDL opisa](vhdl-code-style.md).
 - Dizajn mora biti dokumentovan komentarima prema uputstvu [Dokumentovanje dizajna](design-documentation.md). Dokumentacija je obavezna i ocjenjuje se.

@@ -32,6 +32,7 @@ Prazna linija **između** komentara i elementa je dozvoljena.
 | `@note` | napomena koja se posebno ističe |
 | `@warning` | upozorenje (npr. ograničenja dizajna) |
 | `@see` | referenca na povezani element (npr. drugi entitet) |
+| `@image` | slika u opisu (npr. blok šema, dijagram stanja), vidjeti [Slike u dokumentaciji](#slike-u-dokumentaciji) |
 
 Kompletan spisak komandi dat je u [*Doxygen* dokumentaciji](https://www.doxygen.nl/manual/commands.html). Unutar opisa mogu se koristiti i liste (linije koje počinju sa `-`).
 
@@ -97,6 +98,35 @@ Za sekvencijalna kola na isti način se dokumentuju procesi i signali, uvijek ko
   count_reg : process(clk_i) is
 ```
 
+### Slike u dokumentaciji
+
+Dokumentaciju možete dopuniti slikama, npr. blok šemom, dijagramom stanja ili vremenskim dijagramom. Slike se smještaju u folder `images` unutar foldera zadatka i predaju zajedno sa VHDL opisima:
+
+```
+assignments/
+└── 55/
+    ├── images/
+    │   ├── 55_block_diagram.png
+    │   └── 55_fsm.svg
+    ├── traffic_light.vhd
+    └── traffic_light_tb.vhd
+```
+
+- Koristite formate **PNG** i **SVG**. Fajlovi `*.jpg` su navedeni u fajlu `.gitignore` (u tom formatu alat *Quartus* snima neke svoje izlaze), pa ih *Git* ne bi dodao u komit.
+- Naziv slike **počinje brojem zadatka** (`55_fsm.svg`, a ne `fsm.svg`). *Doxygen* kopira slike svih zadataka u isti folder generisane dokumentacije, pa bi slika istog naziva iz drugog zadatka zamijenila vašu, bez upozorenja.
+- Slika se ubacuje komandom `@image html <naziv> "<natpis>"` u komentaru elementa uz koji treba da stoji (najčešće entitet ili arhitektura). Navodi se samo naziv fajla, bez putanje, a tekst pod navodnicima se prikazuje kao natpis ispod slike. Linija sa komandom je dio istog komentara, bez prazne linije ispred nje.
+
+```vhdl
+--! @brief Traffic light controller
+--! @details Moore state machine with four states, shown in the
+--! state diagram below.
+--! @image html 55_fsm.svg "State diagram of the controller"
+
+entity traffic_light is
+```
+
+Koristite komandu `@image`, a ne *Markdown* zapis slike (`![natpis]` i naziv fajla u zagradama). Ako slika nedostaje ili joj je naziv pogrešno napisan, *Doxygen* uz komandu `@image` ispisuje upozorenje `image file ... is not found in IMAGE_PATH`, a uz *Markdown* zapis samo prikaže neispravnu sliku. Prije predaje provjerite slike u [lokalnom pregledu](#lokalni-pregled-dokumentacije).
+
 ### Pomoć AI asistenta
 
 Dodatak `pds-docs` AI asistenata kursa ([uputstvo za AI alate](https://github.com/etf-unibl/pds-marketplace/blob/main/docs/students.sr.md)) može da:
@@ -118,6 +148,6 @@ Prije predaje, izgled dokumentacije možete provjeriti lokalno:
    doxygen Doxyfile
    ```
 
-3. Otvorite fajl `assignments/html/index.html` u web pregledaču i pronađite svoj dizajn (npr. u meniju **Design Unit List**).
+3. Otvorite fajl `assignments/html/index.html` u web pregledaču i pronađite svoj dizajn (npr. u meniju **Design Unit List**). Ako ste dodali slike, provjerite da li se prikazuju i da li je *Doxygen* za njih ispisao upozorenje.
 
 Folder `html` se ne predaje (naveden je u fajlu `.gitignore`). Podešavanja u fajlu `Doxyfile` ne mijenjajte, jer se isti fajl koristi za objavljivanje dokumentacije na *GitHub Pages*.
