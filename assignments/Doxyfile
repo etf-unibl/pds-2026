@@ -1002,8 +1002,12 @@ EXAMPLE_RECURSIVE      = NO
 # The IMAGE_PATH tag can be used to specify one or more files or directories
 # that contain images that are to be included in the documentation (see the
 # \image command).
+# Images are searched recursively from assignments/ (e.g. assignments/55/images/)
+# and copied flat into html/, so their names must be unique within the whole
+# repository: prefix each image with the task number (55_fsm.png) and reference
+# it by name only: --! @image html 55_fsm.png "State diagram"
 
-IMAGE_PATH             =
+IMAGE_PATH             = .
 
 # The INPUT_FILTER tag can be used to specify a program that doxygen should
 # invoke to filter for each input file. Doxygen will invoke the filter program
