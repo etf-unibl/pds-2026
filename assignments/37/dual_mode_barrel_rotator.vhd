@@ -46,7 +46,7 @@ use ieee.numeric_std.all;
 entity dual_mode_barrel_rotator is
   port (
     a_i    : in    std_logic_vector(15 downto 0);  --! Input data
-    amt_i  : in    std_logic_vector(3 downto 0);   --! Shift amount (0-15)
+    amt_i  : in    std_logic_vector(3 downto 0);   --! Rotation amount (0-15)
     mode_i : in    std_logic;                      --! Direction: '0' for left, '1' for right
     y_o    : out   std_logic_vector(15 downto 0)); --! Output data
 end entity dual_mode_barrel_rotator;
@@ -55,10 +55,18 @@ end entity dual_mode_barrel_rotator;
 --! @details A right rotation by N is mathematically equivalent to a left
 --! rotation by (16 - N). We compute the adjusted shift amount and perform
 --! only a single left rotation, saving logic elements.
+--! @image html 37_rtl.png "RTL view of the optimized realization"
+--! @image html 37_waveform.png "Simulation of both realizations for a_i = ABCD"
+--! Resource usage from the Quartus Flow Summary:
+--! - basic realization: 66 ALMs
+--! - optimized realization: 34 ALMs
+--! - difference: 32 ALMs (48.5 % less than the basic realization)
+--! - the optimized version has one 16-bit rotator and one 16-bit multiplexer fewer
+--! - the savings are in combinational logic, neither realization uses registers
 
 architecture arch of dual_mode_barrel_rotator is
 
-  signal amt_adj : unsigned (3 downto 0);
+  signal amt_adj : unsigned(3 downto 0);
 
 begin
 
@@ -67,7 +75,7 @@ begin
   amt_adj <= unsigned(amt_i) when mode_i = '0' else
              (not unsigned(amt_i)) + 1;
 
-  -- Single rotator instantiation
+  -- Single left rotation
   y_o <= std_logic_vector(rotate_left(unsigned(a_i), to_integer(amt_adj)));
 
 end architecture arch;

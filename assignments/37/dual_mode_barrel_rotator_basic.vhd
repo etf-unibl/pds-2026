@@ -53,6 +53,7 @@ end entity dual_mode_barrel_rotator_basic;
 
 --! @brief Architecture using two separate rotators and a multiplexer
 --! @details Contains distinct data paths for left and right rotation
+--! @image html 37_basic_rtl.png "RTL view of the basic realization"
 
 architecture arch of dual_mode_barrel_rotator_basic is
 
