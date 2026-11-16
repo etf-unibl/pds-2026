@@ -32,7 +32,7 @@
 -- OTHER DEALINGS IN THE SOFTWARE
 -----------------------------------------------------------------------------
 
---! @ file dual_mode_barrel_rotator_tb.vhd
+--! @file dual_mode_barrel_rotator_tb.vhd
 --! @brief Self-checking testbench for dual-mode barrel rotator
 
 library ieee;

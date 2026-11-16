@@ -41,7 +41,7 @@ use ieee.numeric_std.all;
 
 --! @brief Basic 16-bit barrel rotator
 --! @details This entity implements a 16-bit barrel rotator with separate logic
---! for left and right rotations, multiplexed to te output based on the mode.
+--! for left and right rotations, multiplexed to the output based on the mode.
 
 entity dual_mode_barrel_rotator_basic is
   port (
