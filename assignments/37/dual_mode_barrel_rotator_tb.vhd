@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 --
--- unit name:     dual_mode_barrel_rotator_tb
+-- unit name:      dual_mode_barrel_rotator_tb
 --
 -- description:
 --
@@ -138,11 +138,15 @@ begin
           -- Wait for signals to propagate
           wait for 10 ns;
 
-          -- Reference model: calculate expexted value
-          if m = 0 then
-            expected_y := std_logic_vector(rotate_left(unsigned(current_a), i));
+          -- Reference model: calculate expected value using array slicing
+          if i = 0 then
+            expected_y := current_a;
+          elsif m = 0 then
+            -- Left rotation
+            expected_y := current_a(15 - i downto 0) & current_a(15 downto 16 - i);
           else
-            expected_y := std_logic_vector(rotate_right(unsigned(current_a), i));
+            -- Right rotation
+            expected_y := current_a(i - 1 downto 0) & current_a(15 downto i);
           end if;
 
           -- Check basic realization and print inputs on error
@@ -165,7 +169,7 @@ begin
 
     end loop;
 
-    report "Simulatin finished";
+    report "Simulation finished";
     wait;
 
   end process stim_proc;
