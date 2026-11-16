@@ -57,12 +57,20 @@ end entity dual_mode_barrel_rotator;
 --! only a single left rotation, saving logic elements.
 --! @image html 37_rtl.png "RTL view of the optimized realization"
 --! @image html 37_waveform.png "Simulation of both realizations for a_i = ABCD"
+--!
 --! Resource usage from the Quartus Flow Summary:
---! - basic realization: 66 ALMs
---! - optimized realization: 34 ALMs
+--!
+--! | Resource   | Basic | Optimized |
+--! |------------|------:|----------:|
+--! | ALMs       |    66 |        34 |
+--! | Registers  |     0 |         0 |
+--! | DSP blocks |     0 |         0 |
+--!
 --! - difference: 32 ALMs (48.5 % less than the basic realization)
---! - the optimized version has one 16-bit rotator and one 16-bit multiplexer fewer
---! - the savings are in combinational logic, neither realization uses registers
+--! - removed: one 16-bit rotator and one 16-bit multiplexor
+--! - added: a 4-bit negation of the amount (two's complement) and a 4-bit
+--!   multiplexer that selects the amount (signal amt_adj)
+--! -the savings are in combinational logic, neither realization uses Registers
 
 architecture arch of dual_mode_barrel_rotator is
 
