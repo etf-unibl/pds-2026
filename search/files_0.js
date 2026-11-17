@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['four_5fbit_5fcomparator_2evhd_0',['four_bit_comparator.vhd',['../four__bit__comparator_8vhd.html',1,'']]],
-  ['four_5fbit_5ffull_5fadder_2evhd_1',['four_bit_full_adder.vhd',['../17_2four__bit__full__adder_8vhd.html',1,'(Global Namespace)'],['../18_2four__bit__full__adder_8vhd.html',1,'(Global Namespace)']]],
-  ['four_5fbit_5ffull_5fsubtractor_2evhd_2',['four_bit_full_subtractor.vhd',['../19_2four__bit__full__subtractor_8vhd.html',1,'(Global Namespace)'],['../20_2four__bit__full__subtractor_8vhd.html',1,'(Global Namespace)']]],
-  ['four_5fbit_5fsigned_5fcomparator_2evhd_3',['four_bit_signed_comparator.vhd',['../four__bit__signed__comparator_8vhd.html',1,'']]],
-  ['full_5fsubtractor_2evhd_4',['full_subtractor.vhd',['../full__subtractor_8vhd.html',1,'']]]
+  ['dual_5fmode_5fbarrel_5frotator_2evhd_0',['dual_mode_barrel_rotator.vhd',['../dual__mode__barrel__rotator_8vhd.html',1,'']]],
+  ['dual_5fmode_5fbarrel_5frotator_5fbasic_2evhd_1',['dual_mode_barrel_rotator_basic.vhd',['../dual__mode__barrel__rotator__basic_8vhd.html',1,'']]]
 ];
