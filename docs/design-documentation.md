@@ -115,12 +115,13 @@ assignments/
 - Koristite formate **PNG** i **SVG**. Fajlovi `*.jpg` su navedeni u fajlu `.gitignore` (u tom formatu alat *Quartus* snima neke svoje izlaze), pa ih *Git* ne bi dodao u komit.
 - Naziv slike **počinje brojem zadatka** (`55_fsm.svg`, a ne `fsm.svg`). *Doxygen* kopira slike svih zadataka u isti folder generisane dokumentacije, pa bi slika istog naziva iz drugog zadatka zamijenila vašu, bez upozorenja.
 - Slika se ubacuje komandom `@image html <naziv> "<natpis>"` u komentaru elementa uz koji treba da stoji (najčešće entitet ili arhitektura). Navodi se samo naziv fajla, bez putanje, a tekst pod navodnicima se prikazuje kao natpis ispod slike. Linija sa komandom je dio istog komentara, bez prazne linije ispred nje.
+- Veliku sliku ograničite širinom koja se navodi na kraju komande, poslije natpisa: blok šemu, dijagram stanja ili *RTL* prikaz sa `width=600` (širina u pikselima), a vremenski dijagram simulacije, koji je širok i nizak, sa `width=100%` (cijela širina stranice). Navodite samo širinu, visina se prilagođava sama. Na uskom ekranu stranica smanjuje sliku na svoju širinu.
 
 ```vhdl
 --! @brief Traffic light controller
 --! @details Moore state machine with four states, shown in the
 --! state diagram below.
---! @image html 55_fsm.svg "State diagram of the controller"
+--! @image html 55_fsm.svg "State diagram of the controller" width=600
 
 entity traffic_light is
 ```
