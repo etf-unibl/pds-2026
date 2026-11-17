@@ -118,7 +118,7 @@ begin
     -- Outer loop: iterate through all test vectors
     for v in c_TEST_VECTORS'range loop
 
-      current_a := c_test_vectors(v);
+      current_a := c_TEST_VECTORS(v);
       a_i       <= current_a;
 
       -- Middle loop: iterate through modes (0 = left, 1 = right)
