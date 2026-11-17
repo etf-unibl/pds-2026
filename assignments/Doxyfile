@@ -1006,6 +1006,8 @@ EXAMPLE_RECURSIVE      = NO
 # and copied flat into html/, so their names must be unique within the whole
 # repository: prefix each image with the task number (55_fsm.png) and reference
 # it by name only: --! @image html 55_fsm.png "State diagram"
+# Limit large images with a width after the caption: diagrams width=600,
+# waveforms width=100% (e.g. --! @image html 55_fsm.png "State diagram" width=600).
 
 IMAGE_PATH             = .
 
@@ -1286,8 +1288,11 @@ HTML_STYLESHEET        =
 # style sheet in the list overrules the setting of the previous ones in the
 # list). For an example see the documentation.
 # This tag requires that the tag GENERATE_HTML is set to YES.
+# doxygen-extra.css limits images to the page width (max-width: 100%), so a
+# fixed image width (--! @image html 55_fsm.png "State diagram" width=600)
+# does not overflow narrow screens.
 
-HTML_EXTRA_STYLESHEET  =
+HTML_EXTRA_STYLESHEET  = doxygen-extra.css
 
 # The HTML_EXTRA_FILES tag can be used to specify one or more extra images or
 # other source files which should be copied to the HTML output directory. Note
