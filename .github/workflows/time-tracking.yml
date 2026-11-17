@@ -1,6 +1,6 @@
 # Time tracking: sums the "/spent" comments of an issue into the project fields
 # "Time logged (h)" and "Time total (h)", and once a week builds the time report
-# (pinned "time-report" issue, job summary and CSV files).
+# (pinned "time-report" issue, job summary, CSV files and the HTML dashboard dashboard.html).
 name: Time tracking
 
 on:

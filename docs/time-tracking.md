@@ -47,6 +47,8 @@ Jednom sedmično (ponedjeljkom ujutro) *workflow* `Time tracking` ponovo izraču
 - ručno unijeto vrijeme i procjena zadatka sa više dodijeljenih studenata dijele se na jednake dijelove,
 - vrijeme iz komentara `/spent` pripisuje se autoru komentara.
 
+Isto pokretanje pravi i kontrolnu tablu sa grafikonima po iteraciji, po studentu, po kategoriji zadatka i po danu (fajl `dashboard.html` u artifaktu `time-report` pokretanja čiji je link naveden u izvještaju). Kontrolna tabla uračunava zadatke tekuće i prethodnih iteracija koji nisu u koloni *Backlog*. Procjena zadatka dodijeljenog većem broju studenata je ukupna procjena za sve njih, pa procjenu zajedničkog zadatka unesite kao zbir za cijelu grupu (npr. 12 h za šest studenata, po 2 h).
+
 Repozitorijum je javan, pa je i izvještaj, kao i ostatak repozitorijuma, vidljiv svima.
 
 Ručno unijete vrijednosti ulaze u polje `Time total (h)` i u izvještaj pri sljedećem sedmičnom ažuriranju (ili ranije, ako nastavnik ručno pokrene izvještaj), jer izmjene polja na ploči ne pokreću *workflow*.

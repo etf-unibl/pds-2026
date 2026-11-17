@@ -10,7 +10,9 @@ each work session is recorded only once):
 
 The script writes the sum of the comment entries to "Time logged (h)" and the
 sum of both sources to "Time total (h)". In report mode it also builds a report
-(pinned issue, job summary and CSV files).
+(pinned issue, job summary, CSV files and an HTML dashboard, dashboard.html, made
+from time_dashboard.html next to this script). The dashboard counts only issues
+of the current and past iterations that are not in the Backlog column.
 
 Usage:
   time_tracking.py issue <number>                        update one issue and mark its /spent comments
@@ -56,7 +58,7 @@ TEXT = {
                  "several assignees is split equally among them; time logged with `/spent` comments "
                  "is credited to the author of the comment.",
         "generated": "Generated",
-        "run": "Workflow run (CSV files are attached as the `time-report` artifact)",
+        "run": "Workflow run (the dashboard `dashboard.html` and the CSV files are attached as the `time-report` artifact)",
         "per_student": "Per student",
         "per_issue": "Per issue",
         "student": "Student", "issue": "Issue", "assignees": "Assignees", "state": "State",
@@ -71,7 +73,7 @@ TEXT = {
                  "dodijeljenih studenata dijeli se na jednake dijelove; vrijeme evidentirano komentarima "
                  "`/spent` pripisuje se autoru komentara.",
         "generated": "Generisano",
-        "run": "Pokretanje workflow-a (CSV fajlovi su priloženi kao artifakt `time-report`)",
+        "run": "Pokretanje workflow-a (kontrolna tabla `dashboard.html` i CSV fajlovi priloženi su kao artifakt `time-report`)",
         "per_student": "Po studentu",
         "per_issue": "Po zadatku",
         "student": "Student", "issue": "Zadatak", "assignees": "Dodijeljeno", "state": "Status",
@@ -129,8 +131,13 @@ def gql(query, **variables):
 
 # ---------------------------------------------------------------- project
 
-FIELD_VALUES = """fieldValues(first: 50) { nodes { ... on ProjectV2ItemFieldNumberValue {
-  number field { ... on ProjectV2FieldCommon { name } } } } }"""
+FIELD_VALUES = """fieldValues(first: 50) { nodes {
+  ... on ProjectV2ItemFieldNumberValue { number field { ... on ProjectV2FieldCommon { name } } }
+  ... on ProjectV2ItemFieldIterationValue { title startDate field { ... on ProjectV2FieldCommon { name } } }
+  ... on ProjectV2ItemFieldSingleSelectValue { name field { ... on ProjectV2FieldCommon { name } } } } }"""
+FIELD_STATUS = "Status"
+BACKLOG = "backlog"  # Status option whose issues the dashboard does not count (compared case-insensitively)
+DASHBOARD_TEMPLATE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "time_dashboard.html")
 
 
 def find_project(owner, name):
@@ -172,7 +179,33 @@ def ensure_fields(project_id):
 
 
 def numbers(item):
-    return {v["field"]["name"]: v["number"] for v in item["fieldValues"]["nodes"] if v and "field" in v}
+    return {v["field"]["name"]: v["number"] for v in item["fieldValues"]["nodes"] if v and "number" in v and "field" in v}
+
+
+def board_values(item):
+    """Iteration (title, start date) and Status of a project item; None where not set."""
+    iteration, start, status = None, None, None
+    for v in item["fieldValues"]["nodes"]:
+        if not v or "field" not in v:
+            continue
+        if "startDate" in v:
+            iteration, start = v["title"], v["startDate"]
+        elif "name" in v and v["field"].get("name") == FIELD_STATUS:
+            status = v["name"]
+    return iteration, start, status
+
+
+def iterations_of(project_id):
+    """All iterations of the board (past and future), ordered by start date."""
+    data = gql("""query($p: ID!) { node(id: $p) { ... on ProjectV2 { fields(first: 50) { nodes {
+        ... on ProjectV2IterationField { configuration {
+          iterations { title startDate duration } completedIterations { title startDate duration } } } } } } } }""",
+               p=project_id)
+    out = []
+    for f in data["node"]["fields"]["nodes"]:
+        if f and f.get("configuration"):
+            out += f["configuration"]["completedIterations"] + f["configuration"]["iterations"]
+    return sorted(out, key=lambda i: i["startDate"])
 
 
 def set_number(project_id, item_id, field_id, value):
@@ -290,6 +323,7 @@ def mode_report(out_dir):
     t = TEXT.get(os.environ.get("REPORT_LANG", "en"), TEXT["en"])
     project = find_project(owner, name)
     field_ids = ensure_fields(project["id"])
+    today = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d")
 
     items, cursor = [], None
     while True:
@@ -329,9 +363,14 @@ def mode_report(out_dir):
             student(login)["manual"] += spent / len(assignees)
         for e in found:
             student(e["author"])["logged"] += e["hours"]
+        iteration, start, status = board_values(item)
+        # The dashboard counts an issue once its iteration has started, unless it is still in the Backlog
+        counted = bool(start) and start <= today and (status or "").strip().lower() != BACKLOG
         issues.append({"number": c["number"], "title": c["title"], "url": c["url"], "state": c["state"].lower(),
                        "assignees": assignees, "estimate": estimate, "manual": spent, "logged": logged,
-                       "total": total})
+                       "total": total, "iteration": iteration, "status": status, "counted": counted,
+                       "logins": [a["login"] for a in c["assignees"]["nodes"]],
+                       "labels": [l["name"] for l in c["labels"]["nodes"]]})
 
     issues.sort(key=lambda i: i["number"])
     rows = sorted(students.items())
@@ -347,10 +386,12 @@ def mode_report(out_dir):
             w.writerow([login] + [round(s[k], 2) for k in ("estimate", "manual", "logged", "total")])
     with open(os.path.join(out_dir, "time-per-issue.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
-        w.writerow(["issue", "title", "state", "assignees", "estimate_h", "entered_h", "logged_h", "total_h"])
+        w.writerow(["issue", "title", "state", "assignees", "estimate_h", "entered_h", "logged_h", "total_h",
+                    "iteration", "status", "counted_in_dashboard"])
         for i in issues:
             w.writerow([i["number"], i["title"], i["state"], " ".join(i["assignees"]),
-                        i["estimate"], i["manual"], i["logged"], i["total"]])
+                        i["estimate"], i["manual"], i["logged"], i["total"],
+                        i["iteration"] or "", i["status"] or "", int(i["counted"])])
     with open(os.path.join(out_dir, "time-entries.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["date", "issue", "author", "hours", "note", "comment"])
@@ -359,6 +400,13 @@ def mode_report(out_dir):
 
     # Markdown report
     now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    write_dashboard(out_dir, {
+        "repo": repo, "project": project["title"], "generated": now, "today": today,
+        "lang": os.environ.get("REPORT_LANG", "en"), "iterations": iterations_of(project["id"]),
+        "issues": [{k: i[k] for k in ("number", "title", "url", "state", "estimate", "manual", "logged", "total",
+                                     "iteration", "status", "counted", "labels")} | {"assignees": i["logins"]}
+                   for i in issues],
+        "entries": [{k: e[k] for k in ("date", "issue", "author", "hours")} for e in entries]})
     head = [f"## {t['title']}", "", t["intro"], "", f"{t['generated']}: {now}"]
     if os.environ.get("RUN_URL"):
         head.append(f"{t['run']}: {os.environ['RUN_URL']}")
@@ -401,6 +449,15 @@ def mode_report(out_dir):
         number = created["number"]
         gql("mutation($i: ID!) { pinIssue(input: { issueId: $i }) { issue { id } } }", i=created["node_id"])
     print(f"report: {len(issues)} issues, {len(rows)} students, {len(entries)} /spent entries -> issue #{number}")
+
+
+def write_dashboard(out_dir, data):
+    """dashboard.html: the page template with the report data embedded (no external files or requests)."""
+    with open(DASHBOARD_TEMPLATE, encoding="utf-8") as f:
+        page = f.read()
+    blob = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")  # keep titles from closing the script
+    with open(os.path.join(out_dir, "dashboard.html"), "w", encoding="utf-8") as f:
+        f.write(page.replace("/*DATA*/null", blob, 1))
 
 
 def main(argv):

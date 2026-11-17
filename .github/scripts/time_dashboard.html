@@ -1,0 +1,465 @@
+<!doctype html>
+<!-- Time tracking dashboard. time_tracking.py (report mode) replaces the DATA placeholder below
+     with the report data and writes the page as dashboard.html into the time-report artifact. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Time Tracking Dashboard</title>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --ring: rgba(11,11,11,0.10); --track: #e9e8e2;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4; --s6: #008300; --s7: #6250d6; --s8: #e34948;
+  --seq0: #f0efec; --seq1: #cde2fb; --seq2: #9ec5f4; --seq3: #6da7ec; --seq4: #3987e5; --seq5: #256abf; --seq6: #184f95;
+  --over: #d03b3b; --warn: #b26a00;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,0.10); --track: #2c2c2a;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #0ca30c; --s7: #9085e9; --s8: #e66767;
+    --seq0: #232322; --seq1: #104281; --seq2: #184f95; --seq3: #1c5cab; --seq4: #256abf; --seq5: #3987e5; --seq6: #6da7ec;
+    --over: #e66767; --warn: #fab219;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,0.10); --track: #2c2c2a;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #0ca30c; --s7: #9085e9; --s8: #e66767;
+  --seq0: #232322; --seq1: #104281; --seq2: #184f95; --seq3: #1c5cab; --seq4: #256abf; --seq5: #3987e5; --seq6: #6da7ec;
+  --over: #e66767; --warn: #fab219;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 48px; }
+header h1 { font-size: 22px; font-weight: 600; margin: 0 0 4px; }
+header p { margin: 0; color: var(--ink-2); }
+.filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin: 20px 0 16px; }
+.filters label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--ink-2); }
+select, button { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--ring); border-radius: 8px; padding: 6px 10px; }
+button { cursor: pointer; }
+.filters .spacer { flex: 1; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.tile, .card { background: var(--surface); border: 1px solid var(--ring); border-radius: 12px; }
+.tile { padding: 14px 16px; }
+.tile .label { font-size: 12px; color: var(--ink-2); }
+.tile .value { font-size: 28px; font-weight: 600; margin-top: 2px; }
+.tile .sub { font-size: 12px; color: var(--muted); }
+.hero .value { font-size: 48px; line-height: 1.1; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.card { padding: 16px; min-width: 0; }
+.card.wide { grid-column: 1 / -1; }
+.card h2 { font-size: 15px; font-weight: 600; margin: 0; }
+.card .desc { font-size: 12px; color: var(--ink-2); margin: 2px 0 10px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--ink-2); margin-bottom: 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i, .key { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.key { width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; }
+svg { display: block; width: 100%; overflow: visible; }
+svg text { fill: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+svg text.ink { fill: var(--ink-2); }
+.hit { fill: transparent; }
+.hit:hover { fill: var(--ring); }
+#tip { position: fixed; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--ring);
+  border-radius: 8px; padding: 8px 10px; font-size: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); opacity: 0; transition: opacity .08s; z-index: 10; max-width: 320px; }
+#tip b { font-weight: 600; }
+#tip .row { display: flex; justify-content: space-between; gap: 16px; font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--grid); }
+td:not(:first-child) { white-space: nowrap; }
+th { font-weight: 600; color: var(--ink-2); font-size: 12px; white-space: nowrap; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+td a { color: var(--ink); }
+.flag { font-size: 11px; padding: 1px 6px; border-radius: 99px; border: 1px solid currentColor; white-space: nowrap; }
+.flag.over { color: var(--over); } .flag.none { color: var(--warn); }
+.tablewrap { overflow-x: auto; }
+.note { font-size: 12px; color: var(--muted); margin: 16px 0 0; }
+@media (max-width: 760px) { .grid { grid-template-columns: 1fr; } .hero .value { font-size: 40px; } }
+</style>
+</head>
+<body>
+<main>
+  <header><h1 id="t-title"></h1><p id="subtitle"></p></header>
+  <div class="filters">
+    <label><span id="t-iter"></span><select id="f-iter"></select></label>
+    <label><span id="t-student"></span><select id="f-student"></select></label>
+    <label><span id="t-cat"></span><select id="f-cat"></select></label>
+    <div class="spacer"></div>
+    <button id="theme" type="button"></button>
+  </div>
+  <section class="tiles" id="tiles"></section>
+  <section class="grid">
+    <div class="card wide"><h2 id="t-c1"></h2><p class="desc" id="t-c1d"></p><div class="legend" id="lg-iter"></div><div id="ch-iter"></div></div>
+    <div class="card"><h2 id="t-c2"></h2><p class="desc" id="t-c2d"></p><div id="ch-est"></div></div>
+    <div class="card"><h2 id="t-c3"></h2><p class="desc" id="t-c3d"></p><div class="legend" id="lg-cat"></div><div id="ch-cat"></div></div>
+    <div class="card wide"><h2 id="t-c4"></h2><p class="desc" id="t-c4d"></p><div id="ch-heat"></div></div>
+    <div class="card wide"><h2 id="t-c5"></h2><div class="tablewrap"><table id="tb-student"></table></div></div>
+    <div class="card wide"><h2 id="t-c6"></h2><div class="tablewrap"><table id="tb-issue"></table></div></div>
+  </section>
+  <p class="note" id="note"></p>
+  <p class="note" id="excluded"></p>
+</main>
+<div id="tip" role="tooltip"></div>
+
+<script>
+const DATA = /*DATA*/null;
+
+const I18N = {
+  en: {
+    title: "Time tracking", project: "project", generated: "generated",
+    iter: "Iteration", student: "Student", cat: "Category", allIter: "All iterations", allStudents: "All students",
+    allCats: "All categories", theme: "◐ Theme",
+    recorded: "Recorded time", fromSpent: (a, b) => `${a} h from /spent · ${b} h entered`,
+    estimated: "Estimated", estSub: "estimate of a shared issue is split equally",
+    ratio: "Actual / estimate", ratioSub: "all counted issues",
+    entries: "/spent entries", entriesSub: n => `on ${n} different days`,
+    noTime: "Done or in review, no time", noTimeOk: "every finished issue has time",
+    c1: "Hours per iteration", c1d: "Time on the issues of each iteration, stacked by student. The gray tick is the estimate.",
+    c2: "Estimate vs. actual per student", c2d: "Gray track: estimated hours. Colored bar: recorded hours (entered + logged).",
+    c3: "Hours per category", c3d: "Test issues, learning tasks and graded assignments, stacked by student.",
+    c4: "When the work was logged", c4d: "Hours per day from /spent comments, per comment author. Time entered manually in Time spent (h) has no date and is not shown here.",
+    c5: "Per student", c6: "Per issue",
+    estimateH: "Estimate (h)", enteredH: "Entered (h)", loggedH: "Logged (h)", totalH: "Total (h)", ratioCol: "Actual / est.",
+    entriesCol: "/spent entries", days: "Days", last: "Last entry",
+    issue: "Issue", status: "Status", assignees: "Assignees", nStudents: n => `${n} students`,
+    estimate: "Estimate", entered: "Entered", logged: "Logged", total: "Total", recordedTip: "Recorded", day: "Day",
+    flagNone: "no time", flagOver: ">150% of estimate", unassigned: "(unassigned)",
+    cats: { "test issue": "test issue", learning: "learning", other: "other" },
+    note: "Counted are the issues of the current and past iterations that are not in Backlog. The estimate and the manually entered time of an issue with several assignees are split equally (the estimate of a shared issue is the total for all of them); time from /spent comments is credited to the author of the comment.",
+    excluded: (n, h) => `Not counted: ${n} issues (Backlog, a future iteration or no iteration), with ${h} h recorded.`,
+  },
+  sr: {
+    title: "Evidencija utrošenog vremena", project: "projekat", generated: "generisano",
+    iter: "Iteracija", student: "Student", cat: "Kategorija", allIter: "Sve iteracije", allStudents: "Svi studenti",
+    allCats: "Sve kategorije", theme: "◐ Tema",
+    recorded: "Evidentirano vrijeme", fromSpent: (a, b) => `${a} h iz /spent · ${b} h unijeto`,
+    estimated: "Procjena", estSub: "procjena zajedničkog zadatka dijeli se na jednake dijelove",
+    ratio: "Stvarno / procjena", ratioSub: "svi uračunati zadaci",
+    entries: "Unosi /spent", entriesSub: n => `u ${n} različitih dana`,
+    noTime: "Završeno ili u pregledu, bez vremena", noTimeOk: "svi završeni zadaci imaju vrijeme",
+    c1: "Sati po iteraciji", c1d: "Vrijeme utrošeno na zadatke svake iteracije, po studentima. Siva crtica je procjena.",
+    c2: "Procjena i stvarno vrijeme po studentu", c2d: "Siva traka: procijenjeni sati. Obojena traka: evidentirani sati (unijeto + komentari).",
+    c3: "Sati po kategoriji", c3d: "Probni zadaci, zadaci učenja i ocjenjivani zadaci, po studentima.",
+    c4: "Kada je rad evidentiran", c4d: "Sati po danu iz komentara /spent, po autoru komentara. Vrijeme ručno unijeto u polje Time spent (h) nema datum i ovdje nije prikazano.",
+    c5: "Po studentu", c6: "Po zadatku",
+    estimateH: "Procjena (h)", enteredH: "Unijeto (h)", loggedH: "Komentari (h)", totalH: "Ukupno (h)", ratioCol: "Stvarno / procj.",
+    entriesCol: "Unosi /spent", days: "Dana", last: "Posljednji unos",
+    issue: "Zadatak", status: "Status", assignees: "Dodijeljeno", nStudents: n => `${n} studenata`,
+    estimate: "Procjena", entered: "Unijeto", logged: "Komentari", total: "Ukupno", recordedTip: "Evidentirano", day: "Dan",
+    flagNone: "bez vremena", flagOver: ">150% procjene", unassigned: "(nedodijeljeno)",
+    cats: { "test issue": "probni zadatak", learning: "učenje", other: "ostalo" },
+    note: "Uračunati su zadaci tekuće i prethodnih iteracija koji nisu u koloni Backlog. Procjena i ručno unijeto vrijeme zadatka sa više dodijeljenih studenata dijele se na jednake dijelove (procjena zajedničkog zadatka je ukupna procjena za sve); vrijeme iz komentara /spent pripisuje se autoru komentara.",
+    excluded: (n, h) => `Nije uračunato: ${n} zadataka (Backlog, buduća iteracija ili bez iteracije), sa ${h} h evidentiranog vremena.`,
+  },
+};
+const T = I18N[DATA.lang] || I18N.en;
+document.documentElement.lang = DATA.lang === "sr" ? "sr-Latn" : "en";
+for (const [id, key] of [["t-title", "title"], ["t-iter", "iter"], ["t-student", "student"], ["t-cat", "cat"], ["theme", "theme"],
+  ["t-c1", "c1"], ["t-c1d", "c1d"], ["t-c2", "c2"], ["t-c2d", "c2d"], ["t-c3", "c3"], ["t-c3d", "c3d"], ["t-c4", "c4"],
+  ["t-c4d", "c4d"], ["t-c5", "c5"], ["t-c6", "c6"], ["note", "note"]]) document.getElementById(id).textContent = T[key];
+document.title = T.title;
+
+// ---------------------------------------------------------------- model
+const SLOTS = ["--s1", "--s2", "--s3", "--s4", "--s5", "--s6", "--s7", "--s8"];
+const fmt = x => (Math.round(x * 100) / 100).toLocaleString("en", { maximumFractionDigits: 2 });
+const fmt1 = x => (Math.round(x * 10) / 10).toLocaleString("en", { maximumFractionDigits: 1 });
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const sum = (arr, fn) => arr.reduce((a, x) => a + fn(x), 0);
+const catName = c => T.cats[c] || c;
+const short = s => s.length > 18 ? s.slice(0, 17) + "…" : s;
+const UNASSIGNED = T.unassigned;
+
+function category(labels) {
+  const a = labels.find(l => /^assignment-\d+$/.test(l));
+  if (a) return a;
+  if (labels.includes("good first issue")) return "test issue";
+  if (labels.includes("learning")) return "learning";
+  return "other";
+}
+DATA.issues.forEach(i => i.category = category(i.labels));
+const issueByNo = new Map(DATA.issues.map(i => [i.number, i]));
+
+// Colors follow the student, not the rank or the filter: one fixed slot per person, over all issues
+const people = [...new Set(DATA.issues.flatMap(i => i.assignees).concat(DATA.entries.map(e => e.author)))]
+  .sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
+const colorOf = new Map(people.map((s, k) => [s, SLOTS[k % SLOTS.length]]));
+colorOf.set(UNASSIGNED, "--muted");
+
+// Facts of the counted issues: estimate and entered time split equally among the assignees,
+// /spent time credited to the comment author (same attribution as the weekly report)
+const counted = DATA.issues.filter(i => i.counted);
+const facts = [];
+for (const i of counted) {
+  const who = i.assignees.length ? i.assignees : [UNASSIGNED];
+  for (const s of who) facts.push({ student: s, issue: i, estimate: i.estimate / who.length, manual: i.manual / who.length, logged: 0 });
+}
+for (const e of DATA.entries) {
+  const i = issueByNo.get(e.issue);
+  if (i && i.counted) facts.push({ student: e.author, issue: i, estimate: 0, manual: 0, logged: e.hours, date: e.date });
+}
+const students = [...new Set(facts.map(f => f.student))].sort((a, b) =>
+  (a === UNASSIGNED) - (b === UNASSIGNED) || a.localeCompare(b, "en", { sensitivity: "base" }));
+const iterations = DATA.iterations.filter(it => it.startDate <= DATA.today);
+const catOrder = ["test issue", "learning", ...[...new Set(counted.map(i => i.category))].filter(c => c.startsWith("assignment-")).sort(), "other"]
+  .filter(c => counted.some(i => i.category === c));
+
+const excluded = DATA.issues.filter(i => !i.counted);
+document.getElementById("excluded").textContent = excluded.length ? T.excluded(excluded.length, fmt(sum(excluded, i => i.total))) : "";
+document.getElementById("subtitle").textContent = `${DATA.repo} · ${T.project} “${DATA.project}” · ${T.generated} ${DATA.generated}`;
+
+// ---------------------------------------------------------------- filters
+const F = { iter: "", student: "", cat: "" };
+function fillSelect(id, values, all, label = v => v) {
+  const el = document.getElementById(id);
+  el.innerHTML = `<option value="">${esc(all)}</option>` + values.map(v => `<option value="${esc(v)}">${esc(label(v))}</option>`).join("");
+  el.onchange = () => { F[id.slice(2)] = el.value; render(); };
+}
+fillSelect("f-iter", iterations.map(i => i.title), T.allIter);
+fillSelect("f-student", students, T.allStudents);
+fillSelect("f-cat", catOrder, T.allCats, catName);
+const issueOk = i => (!F.iter || i.iteration === F.iter) && (!F.cat || i.category === F.cat);
+const factOk = f => issueOk(f.issue) && (!F.student || f.student === F.student);
+const total = f => f.manual + f.logged;
+
+// ---------------------------------------------------------------- tooltip
+const tip = document.getElementById("tip");
+function showTip(ev, html) {
+  tip.innerHTML = html; tip.style.opacity = 1;
+  const r = tip.getBoundingClientRect();
+  let x = ev.clientX + 14, y = ev.clientY + 14;
+  if (x + r.width > innerWidth - 8) x = ev.clientX - r.width - 14;
+  if (y + r.height > innerHeight - 8) y = ev.clientY - r.height - 14;
+  tip.style.left = Math.max(8, x) + "px"; tip.style.top = Math.max(8, y) + "px";
+}
+function bindTips(root) {
+  root.querySelectorAll("[data-tip]").forEach(el => {
+    el.addEventListener("mousemove", ev => showTip(ev, el.dataset.tip));
+    el.addEventListener("mouseleave", () => tip.style.opacity = 0);
+  });
+}
+const tipRow = (name, val, color) =>
+  `<div class="row"><span>${color ? `<i class="key" style="background:var(${color})"></i>` : ""}${esc(name)}</span><span>${val}</span></div>`;
+
+// ---------------------------------------------------------------- chart helpers
+function niceMax(v) {
+  if (v <= 0) return 1;
+  const p = Math.pow(10, Math.floor(Math.log10(v))), n = v / p;
+  return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p;
+}
+function divs(max) { return Math.round(max / Math.pow(10, Math.floor(Math.log10(max)))) === 2 ? 4 : 5; }
+function colPath(x, y, w, h, round) {   // column: 4px rounded top, square at the baseline
+  if (h <= 0) return "";
+  const r = round ? Math.min(4, w / 2, h) : 0;
+  return `M${x},${y + h}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h}Z`;
+}
+function barPath(x, y, w, h) {          // bar: 4px rounded end, square at the baseline
+  if (w <= 0) return "";
+  const r = Math.min(4, h / 2, w);
+  return `M${x},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h - r}Q${x + w},${y + h} ${x + w - r},${y + h}H${x}Z`;
+}
+function legend(id, keys) {
+  document.getElementById(id).innerHTML = keys.length < 2 ? "" :
+    keys.map(s => `<span><i style="background:var(${colorOf.get(s)})"></i>${esc(s)}</span>`).join("");
+}
+const width = el => Math.max(300, el.clientWidth);
+
+function stackedColumns(el, groups, keys, value, est, label, groupTip) {
+  const W = width(el), H = 260, m = { l: 36, r: 8, t: 14, b: 26 };
+  const iw = W - m.l - m.r, ih = H - m.t - m.b;
+  const totals = groups.map(g => sum(keys, k => value(g, k)));
+  const max = niceMax(Math.max(1, ...totals, ...groups.map(est)));
+  const y = v => m.t + ih - v / max * ih, band = iw / Math.max(1, groups.length), bw = Math.min(38, band * 0.55);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for (let k = 0, D = divs(max); k <= D; k++) {
+    const v = max * k / D, yy = y(v);
+    s += `<line x1="${m.l}" x2="${W - m.r}" y1="${yy}" y2="${yy}" stroke="var(${k ? "--grid" : "--axis"})"/>`;
+    s += `<text x="${m.l - 6}" y="${yy + 4}" text-anchor="end">${fmt1(v)}</text>`;
+  }
+  groups.forEach((g, gi) => {
+    const x = m.l + band * gi + (band - bw) / 2;
+    let acc = 0;
+    const present = keys.filter(k => value(g, k) > 0);
+    present.forEach((k, ki) => {
+      const v = value(g, k), y0 = y(acc), y1 = y(acc + v), gap = ki < present.length - 1 ? 2 : 0;
+      s += `<path d="${colPath(x, y1 + gap, bw, Math.max(0, y0 - y1 - gap), ki === present.length - 1)}" fill="var(${colorOf.get(k)})"/>`;
+      acc += v;
+    });
+    if (est(g) > 0) {
+      const ye = y(est(g));
+      s += `<line x1="${x - 6}" x2="${x + bw + 6}" y1="${ye}" y2="${ye}" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"/>`;
+    }
+    if (totals[gi] > 0) s += `<text class="ink" x="${x + bw / 2}" y="${y(totals[gi]) - 5}" text-anchor="middle">${fmt1(totals[gi])}</text>`;
+    s += `<text x="${m.l + band * gi + band / 2}" y="${H - 8}" text-anchor="middle">${esc(label(g))}</text>`;
+    s += `<rect class="hit" x="${m.l + band * gi}" y="${m.t}" width="${band}" height="${ih}" data-tip="${esc(groupTip(g, present, totals[gi]))}"/>`;
+  });
+  el.innerHTML = s + "</svg>";
+  bindTips(el);
+}
+function addDays(d, n) { const t = new Date(d + "T00:00:00Z"); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); }
+
+// ---------------------------------------------------------------- render
+function render() {
+  const fs = facts.filter(factOk);
+  const iss = counted.filter(issueOk);
+  const shown = F.student ? [F.student] : students;
+  const withTime = shown.filter(k => fs.some(f => f.student === k && total(f) > 0));
+
+  // tiles
+  const tot = sum(fs, total), est = sum(fs, f => f.estimate), logged = sum(fs, f => f.logged), manual = sum(fs, f => f.manual);
+  const missing = iss.filter(i => ["done", "in review"].includes((i.status || "").toLowerCase()) && i.total === 0 &&
+    (!F.student || i.assignees.includes(F.student)));
+  const spentFacts = fs.filter(f => f.date);
+  document.getElementById("tiles").innerHTML = `
+    <div class="tile hero"><div class="label">${esc(T.recorded)}</div><div class="value">${fmt1(tot)} h</div>
+      <div class="sub">${esc(T.fromSpent(fmt1(logged), fmt1(manual)))}</div></div>
+    <div class="tile"><div class="label">${esc(T.estimated)}</div><div class="value">${fmt1(est)} h</div><div class="sub">${esc(T.estSub)}</div></div>
+    <div class="tile"><div class="label">${esc(T.ratio)}</div><div class="value">${est ? Math.round(tot / est * 100) + "%" : "–"}</div><div class="sub">${esc(T.ratioSub)}</div></div>
+    <div class="tile"><div class="label">${esc(T.entries)}</div><div class="value">${spentFacts.length}</div>
+      <div class="sub">${esc(T.entriesSub(new Set(spentFacts.map(f => f.date)).size))}</div></div>
+    <div class="tile"><div class="label">${esc(T.noTime)}</div><div class="value">${missing.length}</div>
+      <div class="sub">${missing.length ? missing.map(i => "#" + i.number).join(", ") : esc(T.noTimeOk)}</div></div>`;
+
+  const stackTip = (title, value, estOf) => (g, present, t) => `<b>${esc(title(g))}</b>` +
+    present.map(k => tipRow(k, fmt(value(g, k)) + " h", colorOf.get(k))).join("") +
+    tipRow(T.total, `<b>${fmt(t)} h</b>`) + tipRow(T.estimate, fmt(estOf(g)) + " h");
+
+  // hours per iteration
+  {
+    const groups = F.iter ? [F.iter] : iterations.map(i => i.title);
+    const value = (g, k) => sum(fs.filter(f => f.issue.iteration === g && f.student === k), total);
+    const estOf = g => sum(fs.filter(f => f.issue.iteration === g), f => f.estimate);
+    legend("lg-iter", withTime);
+    stackedColumns(document.getElementById("ch-iter"), groups, shown, value, estOf, g => g, stackTip(g => g, value, estOf));
+  }
+
+  // estimate vs actual per student
+  {
+    const el = document.getElementById("ch-est");
+    const vals = shown.filter(k => fs.some(f => f.student === k)).map(k => {
+      const mine = fs.filter(f => f.student === k);
+      return { k, est: sum(mine, f => f.estimate), act: sum(mine, total) };
+    });
+    const W = width(el), rh = 34, m = { l: 128, r: 72, t: 4, b: 22 }, H = m.t + m.b + rh * Math.max(1, vals.length);
+    const max = niceMax(Math.max(1, ...vals.map(v => Math.max(v.est, v.act))));
+    const x = v => m.l + v / max * (W - m.l - m.r);
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img">`;
+    for (let k = 0, D = divs(max); k <= D; k++) {
+      const xx = x(max * k / D);
+      s += `<line x1="${xx}" x2="${xx}" y1="${m.t}" y2="${H - m.b}" stroke="var(${k ? "--grid" : "--axis"})"/>`;
+      s += `<text x="${xx}" y="${H - 6}" text-anchor="middle">${fmt1(max * k / D)}</text>`;
+    }
+    vals.forEach((v, i) => {
+      const y0 = m.t + i * rh, pct = v.est ? Math.round(v.act / v.est * 100) + "%" : "";
+      s += `<text class="ink" x="${m.l - 8}" y="${y0 + rh / 2 + 4}" text-anchor="end">${esc(short(v.k))}</text>`;
+      s += `<path d="${barPath(m.l, y0 + 7, x(v.est) - m.l, 20)}" fill="var(--track)"/>`;
+      s += `<path d="${barPath(m.l, y0 + 12, x(v.act) - m.l, 10)}" fill="var(${colorOf.get(v.k)})"/>`;
+      s += `<text class="ink" x="${Math.max(x(v.est), x(v.act)) + 6}" y="${y0 + rh / 2 + 4}">${fmt1(v.act)} h${pct ? " · " + pct : ""}</text>`;
+      s += `<rect class="hit" x="0" y="${y0}" width="${W}" height="${rh}" data-tip="${esc(`<b>${esc(v.k)}</b>` +
+        tipRow(T.recordedTip, fmt(v.act) + " h", colorOf.get(v.k)) + tipRow(T.estimate, fmt(v.est) + " h") + (pct ? tipRow(T.ratio, pct) : ""))}"/>`;
+    });
+    el.innerHTML = s + "</svg>";
+    bindTips(el);
+  }
+
+  // hours per category
+  {
+    const groups = F.cat ? [F.cat] : catOrder;
+    const value = (g, k) => sum(fs.filter(f => f.issue.category === g && f.student === k), total);
+    const estOf = g => sum(fs.filter(f => f.issue.category === g), f => f.estimate);
+    legend("lg-cat", withTime);
+    stackedColumns(document.getElementById("ch-cat"), groups, shown, value, estOf, catName, stackTip(catName, value, estOf));
+  }
+
+  // heatmap: student x day, /spent entries only
+  {
+    const el = document.getElementById("ch-heat");
+    const it = F.iter ? iterations.find(i => i.title === F.iter) : null;
+    const dates = spentFacts.map(f => f.date).sort();
+    const first = it ? it.startDate : (iterations[0] ? iterations[0].startDate : dates[0]);
+    let last = it ? addDays(it.startDate, it.duration - 1) : DATA.today;
+    if (it && last > DATA.today) last = DATA.today;
+    if (dates.length && dates[dates.length - 1] > last) last = dates[dates.length - 1];
+    const days = [];
+    for (let d = first; d && d <= last && days.length < 400; d = addDays(d, 1)) days.push(d);
+    const rows = shown.filter(k => k !== UNASSIGNED);
+    const cell = new Map();
+    spentFacts.forEach(f => { const key = f.student + "|" + f.date; cell.set(key, (cell.get(key) || 0) + f.logged); });
+    const max = Math.max(0.01, ...cell.values());
+    const steps = ["--seq1", "--seq2", "--seq3", "--seq4", "--seq5", "--seq6"];
+    const shade = v => v <= 0 ? "--seq0" : steps[Math.min(steps.length - 1, Math.floor(v / max * steps.length - 1e-9))];
+    const W = width(el), m = { l: 128, r: 4, t: 20, b: 18 }, cw = (W - m.l - m.r) / Math.max(1, days.length), ch = 22;
+    const H = m.t + m.b + Math.max(1, rows.length) * ch;
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img">`;
+    iterations.forEach(i => {
+      const k = days.indexOf(i.startDate);
+      if (k < 0) return;
+      const xx = m.l + k * cw;
+      s += `<line x1="${xx}" x2="${xx}" y1="${m.t - 16}" y2="${H - m.b}" stroke="var(--axis)"/>`;
+      s += `<text x="${xx + 3}" y="${m.t - 6}">${esc(i.title)}</text>`;
+    });
+    rows.forEach((k, r) => {
+      const y0 = m.t + r * ch;
+      s += `<text class="ink" x="${m.l - 8}" y="${y0 + ch / 2 + 4}" text-anchor="end">${esc(short(k))}</text>`;
+      days.forEach((d, c) => {
+        const v = cell.get(k + "|" + d) || 0;
+        const tipHtml = v ? `<b>${esc(k)}</b> · ${d}` + spentFacts.filter(f => f.student === k && f.date === d)
+          .map(f => tipRow("#" + f.issue.number + " " + f.issue.title.slice(0, 30), fmt(f.logged) + " h")).join("") + tipRow(T.day, `<b>${fmt(v)} h</b>`) : "";
+        s += `<rect x="${m.l + c * cw + 1}" y="${y0 + 1}" width="${Math.max(1, cw - 2)}" height="${ch - 2}" rx="3" fill="var(${shade(v)})"` +
+          (v ? ` data-tip="${esc(tipHtml)}"` : "") + `/>`;
+      });
+    });
+    const every = Math.ceil(36 / cw);
+    days.forEach((d, c) => { if (c % every === 0) s += `<text x="${m.l + c * cw + cw / 2}" y="${H - 4}" text-anchor="middle">${d.slice(8)}.${d.slice(5, 7)}.</text>`; });
+    el.innerHTML = s + "</svg>";
+    bindTips(el);
+  }
+
+  // per-student table
+  {
+    const rows = shown.filter(k => fs.some(f => f.student === k)).map(k => {
+      const mine = fs.filter(f => f.student === k), dated = mine.filter(f => f.date);
+      return { k, e: sum(mine, f => f.estimate), m: sum(mine, f => f.manual), l: sum(mine, f => f.logged), t: sum(mine, total),
+               n: dated.length, d: new Set(dated.map(f => f.date)).size, last: dated.map(f => f.date).sort().pop() || "–" };
+    });
+    document.getElementById("tb-student").innerHTML =
+      `<thead><tr><th>${esc(T.student)}</th><th class="n">${esc(T.estimateH)}</th><th class="n">${esc(T.enteredH)}</th><th class="n">${esc(T.loggedH)}</th>` +
+      `<th class="n">${esc(T.totalH)}</th><th class="n">${esc(T.ratioCol)}</th><th class="n">${esc(T.entriesCol)}</th><th class="n">${esc(T.days)}</th><th>${esc(T.last)}</th></tr></thead><tbody>` +
+      rows.map(r => `<tr><td><i class="key" style="background:var(${colorOf.get(r.k)})"></i>${esc(r.k)}</td><td class="n">${fmt(r.e)}</td>` +
+        `<td class="n">${fmt(r.m)}</td><td class="n">${fmt(r.l)}</td><td class="n"><b>${fmt(r.t)}</b></td><td class="n">${r.e ? Math.round(r.t / r.e * 100) + "%" : "–"}</td>` +
+        `<td class="n">${r.n}</td><td class="n">${r.d}</td><td>${r.last}</td></tr>`).join("") + "</tbody>";
+  }
+
+  // per-issue table
+  {
+    const rows = iss.filter(i => !F.student || i.assignees.includes(F.student) ||
+      DATA.entries.some(e => e.issue === i.number && e.author === F.student));
+    document.getElementById("tb-issue").innerHTML =
+      `<thead><tr><th>${esc(T.issue)}</th><th>${esc(T.iter)}</th><th>${esc(T.cat)}</th><th>${esc(T.status)}</th><th>${esc(T.assignees)}</th>` +
+      `<th class="n">${esc(T.estimate)}</th><th class="n">${esc(T.entered)}</th><th class="n">${esc(T.logged)}</th><th class="n">${esc(T.total)}</th><th></th></tr></thead><tbody>` +
+      rows.map(i => {
+        const done = ["done", "in review"].includes((i.status || "").toLowerCase());
+        const flag = done && i.total === 0 ? `<span class="flag none">${esc(T.flagNone)}</span>` :
+          i.estimate && i.total > 1.5 * i.estimate ? `<span class="flag over">${esc(T.flagOver)}</span>` : "";
+        const who = i.assignees.length > 3 ? T.nStudents(i.assignees.length) : (i.assignees.join(", ") || UNASSIGNED);
+        return `<tr><td><a href="${esc(i.url)}" target="_blank" rel="noopener">#${i.number}</a> ${esc(i.title)}</td><td>${esc(i.iteration || "–")}</td>` +
+          `<td>${esc(catName(i.category))}</td><td>${esc(i.status || "–")}</td><td>${esc(who)}</td><td class="n">${fmt(i.estimate)}</td>` +
+          `<td class="n">${fmt(i.manual)}</td><td class="n">${fmt(i.logged)}</td><td class="n"><b>${fmt(i.total)}</b></td><td>${flag}</td></tr>`;
+      }).join("") + "</tbody>";
+  }
+}
+
+document.getElementById("theme").onclick = () => {
+  const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+  const cur = document.documentElement.dataset.theme || (dark ? "dark" : "light");
+  document.documentElement.dataset.theme = cur === "dark" ? "light" : "dark";
+};
+let rt;
+addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(render, 120); });
+render();
+</script>
+</body>
+</html>
