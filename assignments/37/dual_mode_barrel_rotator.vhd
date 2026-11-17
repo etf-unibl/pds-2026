@@ -55,8 +55,8 @@ end entity dual_mode_barrel_rotator;
 --! @details A right rotation by N is mathematically equivalent to a left
 --! rotation by (16 - N). We compute the adjusted shift amount and perform
 --! only a single left rotation, saving logic elements.
---! @image html 37_rtl.png "RTL view of the optimized realization"
---! @image html 37_waveform.png "Simulation of both realizations for a_i = ABCD"
+--! @image html 37_rtl.png "RTL view of the optimized realization" width=600
+--! @image html 37_waveform.png "Simulation of both realizations for a_i = ABCD" width=100%
 --!
 --! Resource usage from the Quartus Flow Summary:
 --!
