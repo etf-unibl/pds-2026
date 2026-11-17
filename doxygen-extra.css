@@ -1,0 +1,10 @@
+/* Additional styles for the Doxygen documentation (HTML_EXTRA_STYLESHEET in Doxyfile).
+ *
+ * Images from "--! @image html ... width=600" keep their size on wide screens,
+ * but never overflow the page on narrow screens (phones, split windows):
+ * they shrink to the page width and keep their aspect ratio.
+ */
+div.image img {
+  max-width: 100%;
+  height: auto;
+}
