@@ -63,6 +63,7 @@ end entity three_mode_barrel_shifter_basic;
 --! If lar_i = "10", an arithmetic shift right is performed, inserting copies of
 --! the sign bit on the left, so y_o <= s_sra.
 --! If lar_i = "11", the input is passed through unchanged, so y_o <= a_i.
+--! @image html 35_basic_rtl.png "RTL view of the basic implementation" width=600
 
 architecture arch of three_mode_barrel_shifter_basic is
 

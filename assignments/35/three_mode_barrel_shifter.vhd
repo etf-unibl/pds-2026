@@ -57,12 +57,29 @@ end entity three_mode_barrel_shifter;
 --! This version uses only one shifter. All three modes shift to the right,
 --! so they differ only in the bits that enter from the left side.
 --! These bits are called fill. The architecture works in three steps:
+--!
 --! 1. The mode lar_i selects the value of fill.
 --! 2. The vector extend = fill & a_i (16 bits) is created.
 --! 3. The output is an 8-bit part (window) of extend. Its start position is
 --!    given by amt_i.
+--!
 --! In the mode "11" the output is simply a_i, so a last multiplexer
 --! selects between the shifted result and a_i.
+--! The resource usage of both implementations on the DE1-SoC chip
+--! (5CSEMA5F31C6, Optimization mode: Balanced) is given in the table:
+--!
+--! | Implementation | ALMs |
+--! | -------------- | ---- |
+--! | Basic          | 29   |
+--! | Optimized      | 22   |
+--!
+--! The optimized version uses 22 ALMs instead of 29, which is about 24% less.
+--! The saving comes from using one shifter instead of three. Only a small
+--! multiplexer for the fill bits is added.
+--!
+--! @image html 35_waveform.png "Simulation of the testbench: both implementations give the same results" width=100%
+--!
+--! @image html 35_rtl.png "RTL view of the optimized implementation" width=600
 
 architecture arch of three_mode_barrel_shifter is
 
