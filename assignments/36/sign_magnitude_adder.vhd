@@ -5,8 +5,8 @@
 -- description:
 --
 --   This file implements the basic realization of a sign magnitude adder.
---   It optimises result of signed addition based on values of MSB of addends.
---   It uses two adders, two comparators, eight MUXs and xor circuit.
+--   It optimises the result of signed addition based on values of MSB of addends.
+--   It uses one adder nad two comparators .
 --
 -----------------------------------------------------------------------------
 -- The MIT License
@@ -41,7 +41,7 @@ use ieee.numeric_std.all;
 
 --! @brief Optimised sign magnitude adder
 --! @details This entity implements a sign magnitude adder
---! with sum-subtraction module.
+--! with a sum-subtraction module.
 
 entity sign_magnitude_adder is
   port (
@@ -50,79 +50,85 @@ entity sign_magnitude_adder is
     sum_o : out   std_logic_vector(8 downto 0)); --! 9 bit sum
 end entity sign_magnitude_adder;
 
-architecture arch of sign_magnitude_adder is
-
 --! @brief Architecture using adder-subtraction module
 --! @details Architecture contains sum-subtraction module and magnitude comparator
 --! @image html 36_rtl.png "RTL view of the optimised realization" width=600
 --! @image html 36_waveform.png "Sample of simulation of both realizations" width=100%
 --! Resource usage from the Quartus Flow Summary:
 --!
---! | Resource   | Basic | Optimized |
+--! | Resource   | Basic | Optimised |
 --! |------------|------:|----------:|
---! | ALMs       |    23 |        14 |
+--! | ALMs       |    22 |        12 |
 --! | Registers  |     0 |         0 |
 --! | DSP blocks |     0 |         0 |
 --!
---! - difference: 9 ALMs (39% less than the basic realization)
---! - removed: one adder, and nine MUX-es.
+--! - difference: 10 ALMs (45% less than the basic realization)
+--! - removed: two one adder and comparator.
 --! -the savings are in combinational logic, neither realization uses Registers
+
+architecture arch of sign_magnitude_adder is
 
 begin
 
   sign_magnitude_adder_process : process(a_i, b_i) is
 
-    variable mag_a_s        : unsigned(7 downto 0); --! unsigned value of a_i
-    variable mag_b_s        : unsigned(7 downto 0); --! unsigned value of b_i
-    variable lhs_s          : unsigned(7 downto 0); --! left hand value
-    variable rhs_s          : unsigned(7 downto 0); --! right hand value
-    variable arith_result_s : unsigned(7 downto 0); --! adder-subtractor output
-    variable result_sign_s  : std_logic;            --! output sign
-    variable is_adding_s    : boolean;              --! operation flag
+    variable mag_a       : unsigned(6 downto 0); -- unsigned value of a_i
+    variable mag_b       : unsigned(6 downto 0); -- unsigned value of b_i
+    variable lhs         : unsigned(6 downto 0); -- left hand value
+    variable rhs         : unsigned(6 downto 0); -- right hand value
+    variable srcone      : unsigned(8 downto 0); -- adder-subtractor output
+    variable srctwo      : unsigned(8 downto 0); -- adder-subtractor output
+    variable sum         : unsigned(8 downto 0); -- adder-subtractor output
+    variable result_sign : std_logic;            -- output sign
+    variable is_adding   : boolean;              -- operation flag
 
   begin
 
-    --! input conversion std_logic_vector -> unsigned
-    mag_a_s := resize(unsigned(a_i(6 downto 0)), 8);
-    mag_b_s := resize(unsigned(b_i(6 downto 0)), 8);
+    -- input conversion std_logic_vector -> unsigned
+    mag_a := unsigned(a_i(6 downto 0));
+    mag_b := unsigned(b_i(6 downto 0));
 
-    --! @brief magnitude comparator with adder-subtractor module.
-    --! @details If signs are matching, addition will be exicuted.
-    --! if magnitude of first number is larger than of second number,
-    --! left hand value will be the first number, and addition will be exicuted
-    --! otherwise left hand value will be second number.
-    --! Sign will always have value of larger magnitude.
+    -- magnitude comparator with adder-subtractor module.
+    -- If signs are matching, addition will be exicuted.
+    -- if magnitude of first number is larger than of second number,
+    -- left hand value will be the first number, and addition will be exicuted
+    -- otherwise the left hand value will be the second number.
+    -- Sign will always have a value of larger magnitude.
 
     if a_i(7) = b_i(7) then
-      lhs_s         := mag_a_s;
-      rhs_s         := mag_b_s;
-      is_adding_s   := true;
-      result_sign_s := a_i(7);
-    elsif mag_a_s >= mag_b_s then
-      lhs_s         := mag_a_s;
-      rhs_s         := mag_b_s;
-      is_adding_s   := false;
-      result_sign_s := a_i(7);
+      lhs         := mag_a;
+      rhs         := mag_b;
+      is_adding   := true;
+      result_sign := a_i(7);
+    elsif mag_a >= mag_b then
+      lhs         := mag_a;
+      rhs         := mag_b;
+      is_adding   := false;
+      result_sign := a_i(7);
     else
-      lhs_s         := mag_b_s;
-      rhs_s         := mag_a_s;
-      is_adding_s   := false;
-      result_sign_s := b_i(7);
+      lhs         := mag_b;
+      rhs         := mag_a;
+      is_adding   := false;
+      result_sign := b_i(7);
     end if;
 
-    --! If is_adding_s is false, subtraction will be done, else addition.
-    if is_adding_s then
-      arith_result_s := lhs_s + rhs_s;
+    srcone := unsigned('0' & std_logic_vector(lhs) & '1');
+
+    -- If is_adding_s is false, second number will be transfored into negative counterpart.
+    if is_adding then
+      srctwo := unsigned('0' & std_logic_vector(rhs) & '0');
     else
-      arith_result_s := lhs_s - rhs_s;
+      srctwo := unsigned('1' & std_logic_vector(not rhs) & '1');
     end if;
 
-    --! If arith_result_s  equals 0 output is "000000000", otherwise it is concatenation of
-    --! result_sign_s and arith_result_s .
-    if arith_result_s = 0 then
-      sum_o <= '0' & std_logic_vector(to_unsigned(0, 8));
+    sum := srcone + srctwo;
+
+    -- If sum(8 downto 1) equals x00 output is "000000000", otherwise it is concatenation of
+    -- result_sign_s and arith_result_s .
+    if sum(8 downto 1) = x"00" then
+      sum_o <= (others => '0');
     else
-      sum_o <= result_sign_s & std_logic_vector(arith_result_s);
+      sum_o <= result_sign & std_logic_vector(sum(8 downto 1));
     end if;
 
   end process sign_magnitude_adder_process;
