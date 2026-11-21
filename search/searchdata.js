@@ -3,7 +3,8 @@ var indexSectionsWithContent =
   0: "abcdefgilmnostxy",
   1: "adfnot",
   2: "dfnot",
-  3: "abcdefgilmnostxy"
+  3: "s",
+  4: "abcdefgilmnostxy"
 };
 
 var indexSectionNames =
@@ -11,7 +12,8 @@ var indexSectionNames =
   0: "all",
   1: "classes",
   2: "files",
-  3: "variables"
+  3: "functions",
+  4: "variables"
 };
 
 var indexSectionLabels =
@@ -19,6 +21,7 @@ var indexSectionLabels =
   0: "All",
   1: "Classes",
   2: "Files",
-  3: "Variables"
+  3: "Functions",
+  4: "Variables"
 };
 
