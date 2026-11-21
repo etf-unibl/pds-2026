@@ -59,7 +59,7 @@ end entity multiply_add_unit_basic;
 --!          | Osnovna        | 26   | 3          |
 --!          | Optimizovana   | 25   | 1          |
 --!
---!           Savings: Optimized version uses 67% fewer DSP blocks (1 vs 3)
+--!          Savings: Optimized version uses 67% fewer DSP blocks (1 vs 3)
 --!          by using operator sharing (one multiplier instead of three).
 --!          ALM count is nearly identical because Quartus maps multipliers
 --!          into dedicated DSP blocks, so they do not consume ALMs.

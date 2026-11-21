@@ -256,14 +256,13 @@ begin
 
     for i in c_TESTS'range loop
 
+      -- Apply inputs
       a_t    <= std_logic_vector(to_unsigned(c_tests(i).a, 8));
       b_t    <= std_logic_vector(to_unsigned(c_tests(i).b, 8));
       c_t    <= std_logic_vector(to_unsigned(c_tests(i).c, 8));
       ctrl_t <= c_tests(i).ctrl;
-      wait for 50 ns;
 
-      -- Calculate expected result using 8-bit operands
-      -- (product of two 8-bit values fits in 16 bits)
+      -- Calculate expected result BEFORE waiting, so it aligns with current inputs
       case c_tests(i).ctrl is
 
         when "00" =>
@@ -298,6 +297,10 @@ begin
 
       expected <= std_logic_vector(v_expected);
 
+      -- Wait for outputs to settle
+      wait for 50 ns;
+
+      -- Check outputs AFTER waiting
       if unsigned(res_basic) /= v_expected then
         report "Basic unit failed at test " & integer'image(i)
           severity error;
