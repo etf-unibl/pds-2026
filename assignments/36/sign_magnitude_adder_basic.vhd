@@ -5,8 +5,8 @@
 -- description:
 --
 --   This file implements the basic realization of a sign magnitude adder.
---   It optimises result of signed addition based on values of MSB of addends.
---   It uses three adders, two comparators, seventeen MUXs and xor circuit.
+--   It optimises the result of signed addition based on values of MSB of addends.
+--   It uses three adders and two comparators.
 --
 -----------------------------------------------------------------------------
 -- The MIT License
@@ -50,57 +50,57 @@ entity sign_magnitude_adder_basic is
     sum_o : out   std_logic_vector(8 downto 0)); --! 9 bit sum
 end entity sign_magnitude_adder_basic;
 
-architecture arch of sign_magnitude_adder_basic is
-
 --! @brief Architecture using adder, two subtractors and magnitude comparator
 --! @details Architecture contains adder, two subtractors and magnitude comparator
 --! @image html 36_basic_rtl.png "RTL view of the basic realization" width=600
+
+architecture arch of sign_magnitude_adder_basic is
 
 begin
 
   sign_magnitude_adder_process : process(a_i, b_i) is
 
-    variable mag_a_s       : unsigned(6 downto 0); --! unsigned value of a_i
-    variable mag_b_s       : unsigned(6 downto 0); --! unsigned value of b_i
-    variable add_mag_s     : unsigned(7 downto 0); --! result of addition
-    variable a_sub_b_s     : unsigned(6 downto 0); --! result of |a| - |b|
-    variable b_sub_a_s     : unsigned(6 downto 0); --! result of |b| - |a|
-    variable result_mag_s  : unsigned(7 downto 0); --! output magnitude
-    variable result_sign_s : std_logic;            --! output sign
+    variable mag_a       : unsigned(6 downto 0); --! unsigned value of a_i
+    variable mag_b       : unsigned(6 downto 0); --! unsigned value of b_i
+    variable add_mag     : unsigned(7 downto 0); --! result of addition
+    variable a_sub_b     : unsigned(6 downto 0); --! result of |a| - |b|
+    variable b_sub_a     : unsigned(6 downto 0); --! result of |b| - |a|
+    variable result_mag  : unsigned(7 downto 0); --! output magnitude
+    variable result_sign : std_logic;            --! output sign
 
   begin
 
     --! input conversion std_logic_vector -> unsigned
-    mag_a_s := unsigned(a_i(6 downto 0));
-    mag_b_s := unsigned(b_i(6 downto 0));
+    mag_a := unsigned(a_i(6 downto 0));
+    mag_b := unsigned(b_i(6 downto 0));
 
-    add_mag_s := resize(mag_a_s, 8) + resize(mag_b_s, 8);      --! adder
-    a_sub_b_s := mag_a_s - mag_b_s;                            --! subtractor |a| - |b|
-    b_sub_a_s := mag_b_s - mag_a_s;                            --! subtractor |b| - |a|
+    add_mag := resize(mag_a, 8) + resize(mag_b, 8);        --! adder
+    a_sub_b := mag_a - mag_b;                              --! subtractor |a| - |b|
+    b_sub_a := mag_b - mag_a;                              --! subtractor |b| - |a|
 
-    --! @brief magnitude comparator with adder and two subtractors.
-    --! @details If signs are matching, reg_mag_s will be result of addition,
-    --! if magnitude of first number is larger than of second number,
-    --! reg_mag_s will be result of |a| - |b|, otherwise reg_mag_s is |b| - |a|,
-    --! Sign will always have value of larger magnitude.
+    -- magnitude comparator with adder and two subtractors.
+    -- If signs are matching, reg_mag will be result of addition,
+    -- if magnitude of first number is larger than of second number,
+    -- reg_mag will be result of |a| - |b|, otherwise reg_mag is |b| - |a|,
+    -- Sign will always have a value of larger magnitude.
 
     if a_i(7) = b_i(7) then
-      result_mag_s  := add_mag_s;
-      result_sign_s := a_i(7);
-    elsif mag_a_s > mag_b_s then
-      result_mag_s  := resize(a_sub_b_s, 8);
-      result_sign_s := a_i(7);
+      result_mag  := add_mag;
+      result_sign := a_i(7);
+    elsif mag_a > mag_b then
+      result_mag  := resize(a_sub_b, 8);
+      result_sign := a_i(7);
     else
-      result_mag_s  := resize(b_sub_a_s, 8);
-      result_sign_s := b_i(7);
+      result_mag  := resize(b_sub_a, 8);
+      result_sign := b_i(7);
     end if;
 
-    --! If result_mag_s equals 0 output is "000000000", otherwise it is concatenation of
-    --! result_sign_s and result_mag_s.
-    if result_mag_s = 0 then
-      sum_o <= '0' & std_logic_vector(to_unsigned(0, 8));
+    -- If result_mag_s equals 0 output is "000000000", otherwise it is concatenation of
+    -- result_sign_s and result_mag_s.
+    if result_mag = 0 then
+      sum_o <= (others => '0');
     else
-      sum_o <= result_sign_s & std_logic_vector(result_mag_s);
+      sum_o <= result_sign & std_logic_vector(result_mag);
     end if;
 
   end process sign_magnitude_adder_process;

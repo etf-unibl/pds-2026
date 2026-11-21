@@ -31,7 +31,7 @@
 -- OTHER DEALINGS IN THE SOFTWARE
 -----------------------------------------------------------------------------
 --! @file sign_magnitude_adder_tb.vhd
---! @brief Sign magnitude adder tesbench
+--! @brief Sign magnitude adder testbench
 
 library ieee;
 use ieee.std_logic_1164.all;
