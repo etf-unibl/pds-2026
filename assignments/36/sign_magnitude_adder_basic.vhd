@@ -5,8 +5,10 @@
 -- description:
 --
 --   This file implements the basic realization of a sign magnitude adder.
---   It optimises the result of signed addition based on values of MSB of addends.
---   It uses three adders and two comparators.
+--   It calculates the result of signed addition based on values of MSB of addends.
+--   It uses three adders and two comparators. If both numbers have the same sign
+--   magnitudes will be added one to another. Otherwise smaller magnitude will be
+--   subtracted from the larger and sign of larger magnitude will be kept.
 --
 -----------------------------------------------------------------------------
 -- The MIT License
@@ -58,30 +60,34 @@ architecture arch of sign_magnitude_adder_basic is
 
 begin
 
+  --! @brief Sign magnitude adder process
+  --! @details Process contains magnitude comparator which determines which
+  --! operation will be executed.
+
   sign_magnitude_adder_process : process(a_i, b_i) is
 
-    variable mag_a       : unsigned(6 downto 0); --! unsigned value of a_i
-    variable mag_b       : unsigned(6 downto 0); --! unsigned value of b_i
-    variable add_mag     : unsigned(7 downto 0); --! result of addition
-    variable a_sub_b     : unsigned(6 downto 0); --! result of |a| - |b|
-    variable b_sub_a     : unsigned(6 downto 0); --! result of |b| - |a|
-    variable result_mag  : unsigned(7 downto 0); --! output magnitude
-    variable result_sign : std_logic;            --! output sign
+    variable mag_a       : unsigned(6 downto 0); -- unsigned value of a_i
+    variable mag_b       : unsigned(6 downto 0); -- unsigned value of b_i
+    variable add_mag     : unsigned(7 downto 0); -- result of addition
+    variable a_sub_b     : unsigned(6 downto 0); -- result of |a| - |b|
+    variable b_sub_a     : unsigned(6 downto 0); -- result of |b| - |a|
+    variable result_mag  : unsigned(7 downto 0); -- output magnitude
+    variable result_sign : std_logic;            -- output sign
 
   begin
 
-    --! input conversion std_logic_vector -> unsigned
+    -- input conversion std_logic_vector -> unsigned
     mag_a := unsigned(a_i(6 downto 0));
     mag_b := unsigned(b_i(6 downto 0));
 
-    add_mag := resize(mag_a, 8) + resize(mag_b, 8);        --! adder
-    a_sub_b := mag_a - mag_b;                              --! subtractor |a| - |b|
-    b_sub_a := mag_b - mag_a;                              --! subtractor |b| - |a|
+    add_mag := resize(mag_a, 8) + resize(mag_b, 8);        -- adder
+    a_sub_b := mag_a - mag_b;                              -- subtractor |a| - |b|
+    b_sub_a := mag_b - mag_a;                              -- subtractor |b| - |a|
 
     -- magnitude comparator with adder and two subtractors.
-    -- If signs are matching, reg_mag will be result of addition,
+    -- If signs are matching, result_mag will be result of addition,
     -- if magnitude of first number is larger than of second number,
-    -- reg_mag will be result of |a| - |b|, otherwise reg_mag is |b| - |a|,
+    -- result_mag will be result of |a| - |b|, otherwise result_mag is |b| - |a|,
     -- Sign will always have a value of larger magnitude.
 
     if a_i(7) = b_i(7) then
