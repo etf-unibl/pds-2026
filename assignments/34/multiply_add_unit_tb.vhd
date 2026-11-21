@@ -46,9 +46,6 @@ end entity multiply_add_unit_tb;
 --! @brief Testbench architecture
 --! @details Instantiates both basic and optimized units and checks all outputs
 --!          against expected values computed using numeric_std.
---!          16 representative test vectors cover all four operations (a*b, a*c, a*b+c, b*c)
---!          with distinct operand values.
---! @image html 34_waveform.png "Simulation waveform - both units produce identical results" width=100%
 
 architecture arch of multiply_add_unit_tb is
 
@@ -84,6 +81,8 @@ architecture arch of multiply_add_unit_tb is
   signal res_basic : std_logic_vector(15 downto 0);
   --! @brief Output from optimized unit
   signal res_opt : std_logic_vector(15 downto 0);
+  --! @brief Expected result for comparison (shown on waveform)
+  signal expected : std_logic_vector(15 downto 0);
 
 begin
 
@@ -107,166 +106,143 @@ begin
 
   --! @brief Stimulus and self-checking process
   --! @details Applies representative test vectors covering all four
-  --!          operations with distinct operand values, so the waveform
-  --!          clearly shows correct behaviour of both units.
+  --!          operations with distinct operand values, including boundary
+  --!          cases (max values, zero operands, carry into upper byte).
   stim : process is
 
     type t_test is record
-      a, b, c : unsigned(7 downto 0);
-      ctrl    : unsigned(1 downto 0);
+      a, b, c : natural;
+      ctrl    : std_logic_vector(1 downto 0);
     end record t_test;
 
-    type t_tests is array (0 to 15) of t_test;
+    type t_tests is array (0 to 19) of t_test;
 
-    --! @brief Test vectors: each ctrl value tested with varied operands
+    --! @brief Test vectors covering all operations and boundary cases
     constant c_TESTS : t_tests :=
     (
-      -- ctrl = "00" (a*b): 4 cases
+      -- ctrl = "00" (a*b): normal and boundary cases
       (
-        to_unsigned(5,
-                     8),
-        to_unsigned(3,
-                     8),
-        to_unsigned(2,
-                     8),
+        5,
+        3,
+        2,
         "00"
       ),
       (
-        to_unsigned(10,
-                     8),
-        to_unsigned(7,
-                     8),
-        to_unsigned(1,
-                     8),
+        10,
+        7,
+        1,
         "00"
       ),
       (
-        to_unsigned(15,
-                     8),
-        to_unsigned(15,
-                     8),
-        to_unsigned(0,
-                     8),
+        255,
+        255,
+        0,
         "00"
       ),
       (
-        to_unsigned(2,
-                     8),
-        to_unsigned(20,
-                     8),
-        to_unsigned(9,
-                     8),
+        0,
+        128,
+        50,
         "00"
       ),
-      -- ctrl = "01" (a*c): 4 cases
+      -- ctrl = "01" (a*c): normal and boundary cases
       (
-        to_unsigned(5,
-                     8),
-        to_unsigned(3,
-                     8),
-        to_unsigned(2,
-                     8),
+        5,
+        3,
+        2,
         "01"
       ),
       (
-        to_unsigned(10,
-                     8),
-        to_unsigned(7,
-                     8),
-        to_unsigned(1,
-                     8),
+        10,
+        7,
+        1,
         "01"
       ),
       (
-        to_unsigned(15,
-                     8),
-        to_unsigned(15,
-                     8),
-        to_unsigned(0,
-                     8),
+        255,
+        0,
+        255,
         "01"
       ),
       (
-        to_unsigned(2,
-                     8),
-        to_unsigned(20,
-                     8),
-        to_unsigned(9,
-                     8),
+        128,
+        50,
+        200,
         "01"
       ),
-      -- ctrl = "10" (a*b+c): 4 cases
+      -- ctrl = "10" (a*b+c): with carry into upper byte
       (
-        to_unsigned(5,
-                     8),
-        to_unsigned(3,
-                     8),
-        to_unsigned(2,
-                     8),
+        5,
+        3,
+        2,
         "10"
       ),
       (
-        to_unsigned(10,
-                     8),
-        to_unsigned(7,
-                     8),
-        to_unsigned(1,
-                     8),
+        10,
+        7,
+        1,
         "10"
       ),
       (
-        to_unsigned(15,
-                     8),
-        to_unsigned(15,
-                     8),
-        to_unsigned(0,
-                     8),
+        255,
+        255,
+        255,
         "10"
       ),
       (
-        to_unsigned(2,
-                     8),
-        to_unsigned(20,
-                     8),
-        to_unsigned(9,
-                     8),
+        200,
+        200,
+        100,
         "10"
       ),
-      -- ctrl = "11" (b*c): 4 cases
+      -- ctrl = "11" (b*c): normal and boundary cases
       (
-        to_unsigned(5,
-                     8),
-        to_unsigned(3,
-                     8),
-        to_unsigned(2,
-                     8),
+        5,
+        3,
+        2,
         "11"
       ),
       (
-        to_unsigned(10,
-                     8),
-        to_unsigned(7,
-                     8),
-        to_unsigned(1,
-                     8),
+        10,
+        7,
+        1,
         "11"
       ),
       (
-        to_unsigned(15,
-                     8),
-        to_unsigned(15,
-                     8),
-        to_unsigned(0,
-                     8),
+        0,
+        255,
+        255,
         "11"
       ),
       (
-        to_unsigned(2,
-                     8),
-        to_unsigned(20,
-                     8),
-        to_unsigned(9,
-                     8),
+        100,
+        200,
+        150,
+        "11"
+      ),
+      -- Additional boundary cases
+      (
+        0,
+        0,
+        0,
+        "00"
+      ),
+      (
+        255,
+        255,
+        255,
+        "01"
+      ),
+      (
+        1,
+        1,
+        1,
+        "10"
+      ),
+      (
+        255,
+        1,
+        255,
         "11"
       )
     );
@@ -280,32 +256,47 @@ begin
 
     for i in c_TESTS'range loop
 
-      a_t    <= std_logic_vector(c_tests(i).a);
-      b_t    <= std_logic_vector(c_tests(i).b);
-      c_t    <= std_logic_vector(c_tests(i).c);
-      ctrl_t <= std_logic_vector(c_tests(i).ctrl);
+      a_t    <= std_logic_vector(to_unsigned(c_tests(i).a, 8));
+      b_t    <= std_logic_vector(to_unsigned(c_tests(i).b, 8));
+      c_t    <= std_logic_vector(to_unsigned(c_tests(i).c, 8));
+      ctrl_t <= c_tests(i).ctrl;
       wait for 50 ns;
 
+      -- Calculate expected result using 8-bit operands
+      -- (product of two 8-bit values fits in 16 bits)
       case c_tests(i).ctrl is
 
         when "00" =>
 
-          v_expected := c_tests(i).a * c_tests(i).b;
+          v_expected := to_unsigned(c_tests(i).a, 8)
+                        * to_unsigned(c_tests(i).b, 8);
 
         when "01" =>
 
-          v_expected := c_tests(i).a * c_tests(i).c;
+          v_expected := to_unsigned(c_tests(i).a, 8)
+                        * to_unsigned(c_tests(i).c, 8);
 
         when "10" =>
 
-          v_expected := (c_tests(i).a * c_tests(i).b)
-                        + resize(c_tests(i).c, 16);
+          v_expected :=
+          (
+            to_unsigned(c_tests(i).a,
+                         8)
+            * to_unsigned(c_tests(i).b,
+                           8)
+          )
+            + to_unsigned(c_tests(i).c,
+                           8
+                         );
 
         when others =>
 
-          v_expected := c_tests(i).b * c_tests(i).c;
+          v_expected := to_unsigned(c_tests(i).b, 8)
+                        * to_unsigned(c_tests(i).c, 8);
 
       end case;
+
+      expected <= std_logic_vector(v_expected);
 
       if unsigned(res_basic) /= v_expected then
         report "Basic unit failed at test " & integer'image(i)
@@ -322,7 +313,7 @@ begin
     end loop;
 
     if v_errors = 0 then
-      report "Testbench finished successfully: all 16 checks passed"
+      report "Testbench finished successfully: all checks passed"
         severity note;
     else
       report "Testbench finished with " & integer'image(v_errors)

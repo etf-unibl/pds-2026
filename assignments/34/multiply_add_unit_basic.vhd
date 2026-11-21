@@ -59,10 +59,14 @@ end entity multiply_add_unit_basic;
 --!          | Osnovna        | 26   | 3          |
 --!          | Optimizovana   | 25   | 1          |
 --!
---!          Savings: Optimized version uses 67% fewer DSP blocks (1 vs 3)
+--!           Savings: Optimized version uses 67% fewer DSP blocks (1 vs 3)
 --!          by using operator sharing (one multiplier instead of three).
---!          ALM count is nearly identical because multiplexers are cheaper
---!          than multipliers on Cyclone V.
+--!          ALM count is nearly identical because Quartus maps multipliers
+--!          into dedicated DSP blocks, so they do not consume ALMs.
+--!          ALMs are used by multiplexers and the adder: the basic version
+--!          has a 16-bit 4:1 output multiplexer, while the optimized version
+--!          has two 8-bit 2:1 input multiplexers and a 16-bit 2:1 output
+--!          multiplexer.
 --! @image html 34_basic_rtl.png "RTL Viewer - basic implementation (3 multipliers)" width=600
 
 architecture arch of multiply_add_unit_basic is
