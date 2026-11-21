@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['two_5fbit_5fcomparator_0',['two_bit_comparator',['../classfour__bit__comparator_1_1arch.html#a25b402fcefbb9dd58726cda4400e467e',1,'four_bit_comparator::arch']]]
+  ['res_5fo_0',['res_o',['../classmultiply__add__unit.html#a6ff9527068d1cc364d708e34d6cce8c5',1,'multiply_add_unit.res_o()'],['../classmultiply__add__unit__basic.html#a6ff9527068d1cc364d708e34d6cce8c5',1,'multiply_add_unit_basic.res_o()']]]
 ];
