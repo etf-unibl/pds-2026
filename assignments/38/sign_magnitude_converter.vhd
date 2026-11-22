@@ -70,7 +70,9 @@ end entity sign_magnitude_converter;
 --! | DSP blocks |     0 |         0 |
 --!
 --! - difference: 3 ALMs (25 % less than the basic realization)
---! - removed: one 8-bit negation circuit and the 8-bit output multiplexer
+--! - removed: one 8-bit negation circuit (complementer + incrementer)
+--! - reduced: three multiplexers of the basic realization (two selected by
+--!   data_i(7) and one by mode_i) to a single 7-bit multiplexer for the magnitude
 --! - added: two logic gates for the sign bit (signal sgn)
 --! - the savings are in combinational logic, neither realization uses registers
 
