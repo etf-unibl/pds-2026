@@ -5,8 +5,9 @@
 -- description:
 --
 --   This file implements the optimised realization of a sign magnitude adder.
---   It optimises the result of signed addition based on values of MSB of addends.
 --   It uses one adder-subtractor and one magnitude comparator.
+--   If sign addends is equeal, addition of magnitudes will be calculated.
+--   Otherwise subtraction will be calculated using the two's complement method on a smaller magnitude.
 --
 -----------------------------------------------------------------------------
 -- The MIT License
@@ -117,7 +118,7 @@ begin
       result_sign := b_i(7);
     end if;
 
-    -- srcone and srctwo are appended so subtraction can be done using the 2nd complement method.
+    -- srcone and srctwo are appended so subtraction can be done using the two's complement method.
     -- srcone will always be appended the same way. srctwo will be appended depending is_adding variable
     srcone := unsigned('0' & std_logic_vector(lhs) & '1');
 
@@ -128,11 +129,11 @@ begin
       srctwo := unsigned('1' & std_logic_vector(not rhs) & '1');
     end if;
 
-    -- subtraction is calculated: sum = lhs + not rhs + 1
+    -- subtraction is calculated: sum = lhs + not rhs + 1, sum is calculated: sum = lhs + rhs
     sum := srcone + srctwo;
 
     -- If sum(8 downto 1) equals x00 output is "000000000", otherwise it is concatenation of
-    -- result_sign and arith_result.
+    -- result_sign and sum(8 downto 1).
     if sum(8 downto 1) = x"00" then
       sum_o <= (others => '0');
     else

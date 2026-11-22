@@ -6,9 +6,9 @@
 --
 --   This file implements the basic realization of a sign magnitude adder.
 --   It calculates the result of signed addition based on values of MSB of addends.
---   It uses three adders and two comparators. If both numbers have the same sign
---   magnitudes will be added one to another. Otherwise smaller magnitude will be
---   subtracted from the larger and sign of larger magnitude will be kept.
+--   It uses one adder, two subtractors and a magnitude comparator. If both numbers
+--   have the same sign magnitudes will be added one to another. Otherwise smaller
+--   magnitude will be subtracted from the larger and sign of larger magnitude will be kept.
 --
 -----------------------------------------------------------------------------
 -- The MIT License
@@ -101,8 +101,8 @@ begin
       result_sign := b_i(7);
     end if;
 
-    -- If result_mag_s equals 0 output is "000000000", otherwise it is concatenation of
-    -- result_sign_s and result_mag_s.
+    -- If result_mag equals 0 output is "000000000", otherwise it is concatenation of
+    -- result_sign and result_mag.
     if result_mag = 0 then
       sum_o <= (others => '0');
     else
